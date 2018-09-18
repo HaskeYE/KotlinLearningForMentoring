@@ -64,7 +64,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = when {((age % 10 in 5..9) or (age % 10 == 0) or (age % 100 in 11..19)) -> "$age лет"
+fun ageDescription(age: Int): String = when {((age % 10 in 5..9) or
+        (age % 10 == 0) or (age % 100 in 11..19)) -> "$age лет"
     age % 10 in 2..4 -> "$age года"
     else -> "$age год"
 }
@@ -98,7 +99,8 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    if ((kingX == rookX1) or (kingY == rookY1)) if ((kingX == rookX2) or (kingY == rookY2)) return 3
+    if ((kingX == rookX1) or (kingY == rookY1)) if ((kingX == rookX2) or
+            (kingY == rookY2)) return 3
     else return 1
     if ((kingX == rookX2) or (kingY == rookY2)) return 2
     else return 0
