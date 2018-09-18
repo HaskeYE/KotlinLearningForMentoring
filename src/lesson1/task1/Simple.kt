@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson1.task1
 
 import kotlin.math.*
@@ -58,7 +59,7 @@ fun main(args: Array<String>) {
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = 3600* hours + 60* minutes + seconds
+fun seconds(hours: Int, minutes: Int, seconds: Int): Int = 3600 * hours + 60 * minutes + seconds
 
 /**
  * Тривиальная
@@ -67,7 +68,8 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = 3600* hours + 60* min
  * Определить длину того же отрезка в метрах (в данном случае 18.98).
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
-fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (48*4.445*sagenes +16*4.445* arshins +4.445*vershoks)/100
+fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
+        (48 * sagenes + 16 * arshins + vershoks) * 4.445 / 100
 
 /**
  * Тривиальная
@@ -75,7 +77,8 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (48*4.44
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = (grad * PI/180+min*PI/180/60+sec*PI/3600/180)
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double =
+        grad * PI / 180 + min * PI / 180 / 60 + sec * PI / 3600 / 180
 
 /**
  * Тривиальная
@@ -83,10 +86,12 @@ fun angleInRadian(grad: Int, min: Int, sec: Int): Double = (grad * PI/180+min*PI
  * Найти длину отрезка, соединяющего точки на плоскости с координатами (x1, y1) и (x2, y2).
  * Например, расстояние между (3, 0) и (0, 4) равно 5
  */
-fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double {val a = sqr((x2-x1))
-val b =sqr((y2-y1))
-    val d = a+b
-    return sqrt(d)}
+fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double {
+    val a = sqr((x2 - x1))
+    val b = sqr((y2 - y1))
+    val d = a + b
+    return sqrt(d)
+}
 
 /**
  * Простая
@@ -94,7 +99,7 @@ val b =sqr((y2-y1))
  * Пользователь задает целое число, большее 100 (например, 3801).
  * Определить третью цифру справа в этом числе (в данном случае 8).
  */
-fun thirdDigit(number: Int): Int = (number/100)%10
+fun thirdDigit(number: Int): Int = (number / 100) % 10
 
 /**
  * Простая
@@ -103,7 +108,8 @@ fun thirdDigit(number: Int): Int = (number/100)%10
  * прибыл на станцию назначения в h2 часов m2 минут того же дня (например в 13:01).
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
-fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int = (hoursArrive-hoursDepart)*60+(minutesArrive-minutesDepart)
+fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int =
+        (hoursArrive - hoursDepart) * 60 + (minutesArrive - minutesDepart)
 
 /**
  * Простая
@@ -112,13 +118,15 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double {val p: Double =percent.toDouble()/100
-    val a = initial*p
-   val y1 = initial + a
-   val c = y1 * p
-    val y2 = y1 +c
-    val f:Double =y2*p
-    return y2+f}
+fun accountInThreeYears(initial: Int, percent: Int): Double {
+    val p = percent.toDouble() / 100
+    val a = initial * p
+    val y1 = initial + a
+    val c = y1 * p
+    val y2 = y1 + c
+    val f = y2 * p
+    return y2 + f
+}
 
 /**
  * Простая
@@ -126,6 +134,8 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {val p: Double =perc
  * Пользователь задает целое трехзначное число (например, 478).
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int {val a = number%10
-val b=(number%100)/10
-return (number/100)+b*10+a*100}
+fun numberRevert(number: Int): Int {
+    val a = number % 10
+    val b = (number % 100) / 10
+    return (number / 100) + b * 10 + a * 100
+}
