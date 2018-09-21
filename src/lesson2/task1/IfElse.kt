@@ -104,6 +104,7 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
     else return 1
     if ((kingX == rookX2) or (kingY == rookY2)) return 2
     else return 0
+
 }
 
 /**
@@ -134,16 +135,16 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val m: Double
     val m1: Double
     val m2: Double
-    if (a > b) if (a > c) {
-        m = a; m1 = b; m2 = c
+    m = maxOf(a, b, c)
+    if (m == a) {
+        m1 = c; m2 = b
+    } else if (
+            m == b) {
+        m1 = a;m2 = c
     } else {
-        m = c; m1 = a; m2 = b
+        m1 = a;m2 = b
     }
-    else if (b > c) {
-        m = b; m1 = c; m2 = a
-    } else {
-        m = c; m1 = a; m2 = b
-    }
+
     if (m > m1 + m2) return -1
     else {
         if (sqr(m) == m1 * m1 + m2 * m2) return 1
@@ -173,3 +174,12 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         else return -1
     else return -1
 }
+
+fun segmentLength1(a: Int, b: Int, c: Int, d: Int): Int =
+        when {
+            ((a >= c) and (d >= a) and (d <= b)) -> d - a
+            ((a >= c) and (d >= a) and (d > b)) -> b - a
+            ((a < c) and (c <= b) and (b <= d)) -> b - c
+            ((a < c) and (c <= b) and (b > d)) -> d - c
+            else -> -1
+        }
