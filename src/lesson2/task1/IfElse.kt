@@ -174,7 +174,7 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         else return -1
     else return -1
 }
-
+/*Второй вариант задачи(для него создал новый тест)*/
 fun segmentLength1(a: Int, b: Int, c: Int, d: Int): Int =
         when {
             ((a >= c) and (d >= a) and (d <= b)) -> d - a
