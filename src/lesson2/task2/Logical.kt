@@ -21,8 +21,8 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean {
-    val a: Int = ((number % 10) + (number / 10 % 10))
-    val b: Int = (((number / 100) % 10) + (number / 1000))
+    val a = ((number % 10) + (number / 10 % 10))
+    val b = (((number / 100) % 10) + (number / 1000))
     return (a == b)
 }
 
@@ -33,12 +33,10 @@ fun isNumberHappy(number: Int): Boolean {
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-    if ((x1 == x2) or
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
+         ((x1 == x2) or
             (y1 == y2) or
-            ((kotlin.math.abs(x1 - x2)) == (kotlin.math.abs(y1 - y2)))) return true
-    else return false
-}
+            ((kotlin.math.abs(x1 - x2)) == (kotlin.math.abs(y1 - y2))))
 
 
 /**
@@ -47,9 +45,9 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int {
+fun daysInMonth(month: Int, year: Int): Int =
 
-    return when {
+     when {
         ((year % 4 == 0) and (year % 100 != 0) and (month == 2)) -> 29
         ((year % 400 == 0) and (month == 2)) -> 29
         month == (1 or 5 or 7 or 8 or 10 or 12) -> 31
@@ -57,7 +55,6 @@ fun daysInMonth(month: Int, year: Int): Int {
         else -> 28
     }
 
-}
 
 /**
  * Средняя
@@ -96,5 +93,5 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     } else {
         m = c; m1 = b
     }
-    if (((m <= r) and (m1 <= s)) or ((m <= s) and (m1 <= r))) return true else return false
+    return (((m <= r) and (m1 <= s)) or ((m <= s) and (m1 <= r)))
 }

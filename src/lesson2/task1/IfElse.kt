@@ -105,7 +105,6 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
     else return 1
     if ((kingX == rookX2) or (kingY == rookY2)) return 2
     else return 0
-
 }
 
 /**
@@ -121,9 +120,9 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int = when {
-    (((kingX == rookX) or (kingY == rookY)) and ((abs(kingX-bishopX)) == abs(kingY-bishopY))) -> 3
+    (((kingX == rookX) or (kingY == rookY)) and ((abs(kingX - bishopX)) == abs(kingY - bishopY))) -> 3
     ((kingX == rookX) or (kingY == rookY)) -> 1
-    abs(kingX-bishopX) == abs(kingY-bishopY) -> 2
+    abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
     else -> 0
 }
 
@@ -178,6 +177,7 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         else return -1
     else return -1
 }
+
 /*Второй вариант задачи(для него создал новый тест)*/
 fun segmentLength1(a: Int, b: Int, c: Int, d: Int): Int =
         when {
