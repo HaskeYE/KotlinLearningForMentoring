@@ -129,8 +129,7 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var x = 2
-    val k = n.toDouble()
-    for (i in 1..k.toInt()) while (n % x != 0) x += 1
+    for (i in 1..n) while (n % x != 0) x += 1
     return x
 }
 
@@ -148,7 +147,16 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    var x = 2
+    var c=0
+    val s= min(m,n)
+for (i in 1..s)  {
+    if ((n%x==0) && (m%x==0)) c++
+    x ++
+}
+    return (c==0)
+}
 
 /**
  * Простая
