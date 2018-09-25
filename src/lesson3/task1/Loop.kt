@@ -3,6 +3,8 @@
 package lesson3.task1
 
 
+import lesson1.task1.sqr
+import org.omg.CORBA.INTERNAL
 import java.lang.Math.pow
 import kotlin.math.floor
 import kotlin.math.max
@@ -111,7 +113,7 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var a = max(m, n)
+    val a = max(m, n)
     val b = min(m, n)
     var g = 1
     if (a % b == 0) return a else {
@@ -198,11 +200,11 @@ fun sin(x: Double, eps: Double): Double {
     var s = x
     var g = 3
     var n = 1
-    while ((Math.pow(s, g.toDouble())) / factorial(g) >= eps) {
+    while ((Math.pow(x, g.toDouble())) / factorial(g) >= eps) {
         if (n % 2 != 0)
             s -= (Math.pow(x, g.toDouble())) / factorial(g) else
             s += (Math.pow(x, g.toDouble())) / factorial(g)
-        g += 2; n++; print(s)
+        g += 2; n++
     }
     return s
 }
@@ -214,7 +216,18 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var s = x
+    var g = 2
+    var n = 1
+    while ((Math.pow(x, g.toDouble())) / factorial(g) >= eps) {
+        if (n % 2 != 0)
+            s -= (Math.pow(x, g.toDouble())) / factorial(g) else
+            s += (Math.pow(x, g.toDouble())) / factorial(g)
+        g += 2; n++
+    }
+    return s
+}
 
 /**
  * Средняя
@@ -223,7 +236,22 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var f: Int
+    var e = 1
+    var s = n
+    var g: Int
+    var t: Int
+    for (i in 1..(floor(digitNumber(n).toDouble() / 2).toInt())) {
+        f = pow(10.0, (digitNumber(n).toDouble() - e)).toInt()
+        g = ((s / f) % 10)
+        t = (s / pow(10.0, (e.toDouble() - 1)).toInt()) % 10
+        s = s - g * f - (t * pow(10.0, (e.toDouble() - 1))).toInt() +
+                +t * f + g * pow(10.0, (e.toDouble() - 1)).toInt()
+        e++
+    }
+    return s
+}
 
 /**
  * Средняя
@@ -234,7 +262,7 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
@@ -244,7 +272,19 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    val s = n % 10
+    var g = n / 10
+    var count = 1
+    if (n < 10) return true else {
+        for (i in 2..digitNumber(n))
+            while (g % 10 == s) {
+                g /= 10
+                count++
+            }
+        return (count == digitNumber(n))
+    }
+}
 
 /**
  * Сложная
@@ -255,7 +295,15 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var g = 0
+    var s = 1
+    while (g < n) {
+        g += digitNumber(sqr(s))
+        s++
+    }
+    return (sqr(s - 1) / pow(10.0, (g - n).toDouble()).toInt()) % 10
+}
 
 /**
  * Сложная
@@ -272,8 +320,8 @@ fun fibSequenceDigit(n: Int): Int {
     if (n <= 2) return 1 else {
         while (g < n) {
             g += digitNumber(fib(s))
-            s ++
+            s++
         }
-    if (g == n) return fib(s-1) % 10 else
-        return (fib(s - 2) / pow(10.0, ((digitNumber(fib(s-2))) - (n - (g - digitNumber(fib(s-1))))).toDouble()).toInt()) % 10}
+        return (fib(s - 1) / pow(10.0, (g - n).toDouble()).toInt()) % 10
+    }
 }
