@@ -4,6 +4,7 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import lesson4.task1.abs
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 /**
@@ -34,9 +35,9 @@ fun isNumberHappy(number: Int): Boolean {
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-         ((x1 == x2) or
-            (y1 == y2) or
-            ((kotlin.math.abs(x1 - x2)) == (kotlin.math.abs(y1 - y2))))
+        ((x1 == x2) ||
+                (y1 == y2) ||
+                ((abs(x1 - x2)) == (abs(y1 - y2))))
 
 
 /**
@@ -47,13 +48,13 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  */
 fun daysInMonth(month: Int, year: Int): Int =
 
-     when {
-        ((year % 4 == 0) and (year % 100 != 0) and (month == 2)) -> 29
-        ((year % 400 == 0) and (month == 2)) -> 29
-        month == (1 or 5 or 7 or 8 or 10 or 12) -> 31
-        month == 4 or 6 or 9 or 11 -> 30
-        else -> 28
-    }
+        when {
+            ((year % 4 == 0) and (year % 100 != 0) and (month == 2)) -> 29
+            ((year % 400 == 0) and (month == 2)) -> 29
+            month == 1 or 5 or 7 or 8 or 10 or 12 -> 31
+            month == 4 or 6 or 9 or 11 -> 30
+            else -> 28
+        }
 
 
 /**
@@ -77,21 +78,9 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val m: Int
-    val m1: Int
-    if (a <= b)
-        if (a <= c) {
-            m = a
-            if (b <= c) m1 = b else m1 = c
-        } else {
-            m = c; m1 = a
-        }
-    else if (b <= c) {
-        m = b
-        if (a <= c) m1 = a else m1 = c
-    } else {
-        m = c; m1 = b
-    }
-    return (((m <= r) and (m1 <= s)) or ((m <= s) and (m1 <= r)))
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when {
+    (((a <= r) && (b <= s)) || ((a <= s) && (b <= r))) -> true
+    (((a <= r) && (c <= s)) || ((a <= s) && (c <= r))) -> true
+    (((c <= r) && (b <= s)) || ((c <= s) && (b <= r))) -> true
+    else -> false
 }
