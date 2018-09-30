@@ -99,13 +99,13 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int {
-    if ((kingX == rookX1) or (kingY == rookY1)) if ((kingX == rookX2) or
-            (kingY == rookY2)) return 3
-    else return 1
-    if ((kingX == rookX2) or (kingY == rookY2)) return 2
-    else return 0
+                       rookX2: Int, rookY2: Int): Int = when {
+    ((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2)) -> 3
+    ((kingX == rookX1) || (kingY == rookY1)) -> 1
+    ((kingX == rookX2) || (kingY == rookY2)) -> 2
+    else -> 0
 }
+
 
 /**
  * Простая
@@ -135,26 +135,24 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val m: Double
+    val m = maxOf(a, b, c)
     val m1: Double
     val m2: Double
-    m = maxOf(a, b, c)
-    if (m == a) {
+    when {(m == a) -> {
         m1 = c; m2 = b
-    } else if (
-            m == b) {
-        m1 = a;m2 = c
-    } else {
-        m1 = a;m2 = b
     }
-
-    if (m > m1 + m2) return -1
-    else {
-        if (sqr(m) == m1 * m1 + m2 * m2) return 1
-        if (sqr(m) > m1 * m1 + m2 * m2) return 2
-        else return 0
+        (m == b) -> {
+            m1 = a;m2 = c
+        }
+        else -> {
+            m1 = a;m2 = b
+        }
     }
-
+    return when {(m > m1 + m2) -> -1
+        (sqr(m) == m1 * m1 + m2 * m2) -> 1
+        (sqr(m) > m1 * m1 + m2 * m2) -> 2
+        else -> 0
+    }
 }
 
 
@@ -166,7 +164,17 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+        when {
+            ((a >= c) and (d >= a) and (d <= b)) -> d - a
+            ((a >= c) and (d >= a) and (d > b)) -> b - a
+            ((a < c) and (c <= b) and (b <= d)) -> b - c
+            ((a < c) and (c <= b) and (b > d)) -> d - c
+            else -> -1
+        }
+
+/*Второй вариант задачи(для него создал новый тест)*/
+fun segmentLength1(a: Int, b: Int, c: Int, d: Int): Int {
     if (a >= c)
         if (d >= a)
             if (d <= b) return d - a else return b - a
@@ -177,13 +185,3 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         else return -1
     else return -1
 }
-
-/*Второй вариант задачи(для него создал новый тест)*/
-fun segmentLength1(a: Int, b: Int, c: Int, d: Int): Int =
-        when {
-            ((a >= c) and (d >= a) and (d <= b)) -> d - a
-            ((a >= c) and (d >= a) and (d > b)) -> b - a
-            ((a < c) and (c <= b) and (b <= d)) -> b - c
-            ((a < c) and (c <= b) and (b > d)) -> d - c
-            else -> -1
-        }

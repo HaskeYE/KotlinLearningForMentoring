@@ -4,7 +4,6 @@ package lesson3.task1
 
 
 import lesson1.task1.sqr
-import org.omg.CORBA.INTERNAL
 import java.lang.Math.pow
 import kotlin.math.floor
 import kotlin.math.max
@@ -129,7 +128,7 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var x = 2
-    for (i in 1..n) while (n % x != 0) x += 1
+    for (i in 2..sqrt(n.toDouble()).toInt()) while (n % x != 0) x += 1
     return x
 }
 
@@ -149,13 +148,13 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     var x = 2
-    var c=0
-    val s= min(m,n)
-for (i in 1..s)  {
-    if ((n%x==0) && (m%x==0)) c++
-    x ++
-}
-    return (c==0)
+    var c = 0
+    val s = min(m, n)
+    for (i in 1..s) {
+        if ((n % x == 0) && (m % x == 0)) c++
+        x++
+    }
+    return (c == 0)
 }
 
 /**
@@ -206,14 +205,15 @@ fun collatzSteps(x: Int): Int {
  */
 fun sin(x: Double, eps: Double): Double {
     var s = x
-    var g = 3
+    var g = 3.0
     var n = 1
-    while ((Math.pow(x, g.toDouble())) / factorial(g) >= eps) {
+    if (x > 0)
+    {    while ((Math.pow(x, g)) / factorial(g.toInt()) >= eps) {
         if (n % 2 != 0)
-            s -= (Math.pow(x, g.toDouble())) / factorial(g) else
-            s += (Math.pow(x, g.toDouble())) / factorial(g)
+            s = ((Math.pow(x, g)) / factorial(g.toInt())) else
+            s += ((Math.pow(x, g)) / factorial(g.toInt()))
         g += 2; n++
-    }
+    } } else s= 0.0
     return s
 }
 
@@ -283,16 +283,13 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
 fun hasDifferentDigits(n: Int): Boolean {
     val s = n % 10
     var g = n / 10
-    var count = 1
-    if (n < 10) return true else {
-        for (i in 2..digitNumber(n))
-            while (g % 10 == s) {
-                g /= 10
-                count++
-            }
-        return (count == digitNumber(n))
+    while (g > 0) {
+        if (g % 10 != s) return true
+        g /= 10
     }
+    return false
 }
+
 
 /**
  * Сложная
