@@ -2,6 +2,7 @@
 
 package lesson1.task1
 
+import java.lang.Math.pow
 import kotlin.math.*
 
 /**
@@ -78,7 +79,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double =
-        grad*PI /180 + min*PI / 10800 + sec*PI / 648000
+        (PI * grad + PI * min / 60 + PI * sec / 3600) / 180
 
 /**
  * Тривиальная
@@ -119,7 +120,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double =
-        Math.pow(percent * 0.01 + 1, 3.0) * initial
+        pow(percent * 0.01 + 1, 3.0) * initial
 
 
 /**

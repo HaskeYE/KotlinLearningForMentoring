@@ -138,9 +138,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val m = maxOf(a, b, c)
     val m1: Double
     val m2: Double
-    when {(m == a) -> {
-        m1 = c; m2 = b
-    }
+    when {
+        (m == a) -> {
+            m1 = c; m2 = b
+        }
         (m == b) -> {
             m1 = a;m2 = c
         }
