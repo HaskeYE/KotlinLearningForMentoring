@@ -76,11 +76,9 @@ fun digitNumber(n: Int): Int {
     var s = n
     var g = 0
     if (n < 10) return 1 else {
-        for (i in 1..n) {
-            while (s > 0) {
-                s /= 10
-                g += 1
-            }
+        while (s > 0) {
+            s /= 10
+            g += 1
         }
         return g
     }
@@ -127,9 +125,11 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var x = 2
-    for (i in 2..sqrt(n.toDouble()).toInt()) while (n % x != 0) x += 1
-    return x
+    if (isPrime(n) == false) {
+        var x = 2
+        for (i in 2..sqrt(n.toDouble()).toInt()) while (n % x != 0) x += 1
+        return x
+    } else return n
 }
 
 /**
@@ -149,8 +149,7 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
 fun isCoPrime(m: Int, n: Int): Boolean {
     var x = 2
     var c = 0
-    val s = min(m, n)
-    for (i in 1..s) {
+    for (i in 1 until min(m, n)) {
         if ((n % x == 0) && (m % x == 0)) c++
         x++
     }
@@ -189,7 +188,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
 fun collatzSteps(x: Int): Int {
     var n = x
     var g = 0
-    for (i in 1..x) while (n != 1) {
+    while (n != 1) {
         if (n % 2 == 0) n /= 2 else n = 3 * n + 1
         g++
     }
@@ -207,13 +206,15 @@ fun sin(x: Double, eps: Double): Double {
     var s = x
     var g = 3.0
     var n = 1
-    if (x > 0)
-    {    while ((Math.pow(x, g)) / factorial(g.toInt()) >= eps) {
-        if (n % 2 != 0)
-            s = ((Math.pow(x, g)) / factorial(g.toInt())) else
-            s += ((Math.pow(x, g)) / factorial(g.toInt()))
-        g += 2; n++
-    } } else s= 0.0
+    if (x > 0) {
+        while ((pow(x, g)) / factorial(g.toInt()) >= eps) {
+            if (n % 2 != 0)
+                s -= ((pow(x, g)) / factorial(g.toInt())) else
+                s += ((pow(x, g)) / factorial(g.toInt()))
+            g += 2
+            n++
+        }
+    } else s = 0.0
     return s
 }
 
@@ -246,17 +247,17 @@ fun cos(x: Double, eps: Double): Double {
  */
 fun revert(n: Int): Int {
     var f: Int
-    var e = 1
+    var digitN = 1
     var s = n
     var g: Int
     var t: Int
     for (i in 1..(floor(digitNumber(n).toDouble() / 2).toInt())) {
-        f = pow(10.0, (digitNumber(n).toDouble() - e)).toInt()
+        f = pow(10.0, (digitNumber(n).toDouble() - digitN)).toInt()
         g = ((s / f) % 10)
-        t = (s / pow(10.0, (e.toDouble() - 1)).toInt()) % 10
-        s = s - g * f - (t * pow(10.0, (e.toDouble() - 1))).toInt() +
-                +t * f + g * pow(10.0, (e.toDouble() - 1)).toInt()
-        e++
+        t = (s / pow(10.0, (digitN.toDouble() - 1)).toInt()) % 10
+        s = s - g * f - (t * pow(10.0, (digitN.toDouble() - 1))).toInt() +
+                +t * f + g * pow(10.0, (digitN.toDouble() - 1)).toInt()
+        digitN++
     }
     return s
 }
