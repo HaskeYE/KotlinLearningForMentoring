@@ -203,10 +203,10 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var s = x
+    var s = x % (2 * PI)
     var g = 3.0
     var n = 1
-    if (x > 0) {
+    if (s > 0) {
         while ((pow(x, g)) / factorial(g.toInt()) >= eps) {
             if (n % 2 != 0)
                 s -= ((pow(x, g)) / factorial(g.toInt())) else
@@ -214,8 +214,8 @@ fun sin(x: Double, eps: Double): Double {
             g += 2
             n++
         }
-    } else s = 0.0
-    return s
+        return s
+    } else return s
 }
 
 /**
