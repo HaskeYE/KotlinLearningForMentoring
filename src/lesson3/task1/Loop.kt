@@ -207,10 +207,10 @@ fun sin(x: Double, eps: Double): Double {
     var g = 3.0
     var n = 1
     if (s > 0) {
-        while ((pow(x, g)) / factorial(g.toInt()) >= eps) {
+        while ((pow(x % (2 * PI), g)) / factorial(g.toInt()) >= eps) {
             if (n % 2 != 0)
-                s -= ((pow(x, g)) / factorial(g.toInt())) else
-                s += ((pow(x, g)) / factorial(g.toInt()))
+                s -= ((pow(x % (2 * PI), g)) / factorial(g.toInt())) else
+                s += ((pow(x % (2 * PI), g)) / factorial(g.toInt()))
             g += 2
             n++
         }
@@ -226,13 +226,13 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var s = x
+    var s = (x) % (2 * PI) + (PI / 2)
     var g = 2
     var n = 1
-    while ((Math.pow(x, g.toDouble())) / factorial(g) >= eps) {
+    while ((Math.pow((x) % (2 * PI) + (PI / 2), g.toDouble())) / factorial(g) >= eps) {
         if (n % 2 != 0)
-            s -= (Math.pow(x, g.toDouble())) / factorial(g) else
-            s += (Math.pow(x, g.toDouble())) / factorial(g)
+            s -= (Math.pow((x) % (2 * PI) + (PI / 2), g.toDouble())) / factorial(g) else
+            s += (Math.pow((x) % (2 * PI) + (PI / 2), g.toDouble())) / factorial(g)
         g += 2; n++
     }
     return s
