@@ -73,9 +73,9 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var s = n
+    var s = abs(n)
     var g = 0
-    if (n < 10) return 1 else {
+    if (abs(n) < 10) return 1 else {
         while (s > 0) {
             s /= 10
             g += 1
@@ -150,7 +150,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var x = 2
     var c = 0
     for (i in 1 until min(m, n)) {
-        if ((n % x == 0) && (m % x == 0)) c++
+        if ((n % x == 0) && (m % x == 0)) {
+            c++
+            break
+        }
         x++
     }
     return (c == 0)
@@ -206,11 +209,12 @@ fun sin(x: Double, eps: Double): Double {
     var s = x % (2 * PI)
     var g = 3.0
     var n = 1
+    val j = x % (2 * PI)
     if (s > 0) {
-        while ((pow(x % (2 * PI), g)) / factorial(g.toInt()) >= eps) {
+        while ((pow(j, g)) / factorial(g.toInt()) >= eps) {
             if (n % 2 != 0)
-                s -= ((pow(x % (2 * PI), g)) / factorial(g.toInt())) else
-                s += ((pow(x % (2 * PI), g)) / factorial(g.toInt()))
+                s -= ((pow(j, g)) / factorial(g.toInt())) else
+                s += ((pow(j, g)) / factorial(g.toInt()))
             g += 2
             n++
         }
