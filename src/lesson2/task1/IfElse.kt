@@ -140,16 +140,20 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val m2: Double
     when {
         (m == a) -> {
-            m1 = c; m2 = b
+            m1 = c
+            m2 = b
         }
         (m == b) -> {
-            m1 = a;m2 = c
+            m1 = a
+            m2 = c
         }
         else -> {
-            m1 = a;m2 = b
+            m1 = a
+            m2 = b
         }
     }
-    return when {(m > m1 + m2) -> -1
+    return when {
+        (m > m1 + m2) -> -1
         (sqr(m) == m1 * m1 + m2 * m2) -> 1
         (sqr(m) > m1 * m1 + m2 * m2) -> 2
         else -> 0
