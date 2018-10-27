@@ -253,13 +253,12 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     val s = StringBuilder()
     var a = n
-    val alphabet = "abcdefghijklmnopqrstuvwxyz"
     if (n == 0) s.append(0)
     else
         while (a > 0) {
             when {
                 a % base < 10 -> s.append(a % base)
-                a % base > 10 -> s.append(alphabet[a % base - 10])
+                a % base > 10 -> s.append((a % base + 87).toChar())
             }
             a /= base
         }
@@ -292,45 +291,11 @@ fun decimal(digits: List<Int>, base: Int): Int {
 fun decimalFromString(str: String, base: Int): Int {
     var s = 0
     for (i in 0 until str.length) {
-        val e = Math.pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
-        when {
-            str[i] == '0' -> s += 0 * e
-            str[i] == '1' -> s += 1 * e
-            str[i] == '2' -> s += 2 * e
-            str[i] == '3' -> s += 3 * e
-            str[i] == '4' -> s += 4 * e
-            str[i] == '5' -> s += 5 * e
-            str[i] == '6' -> s += 6 * e
-            str[i] == '7' -> s += 7 * e
-            str[i] == '8' -> s += 8 * e
-            str[i] == '9' -> s += 9 * e
-            str[i] == 'a' -> s += 10 * e
-            str[i] == 'b' -> s += 11 * e
-            str[i] == 'c' -> s += 12 * e
-            str[i] == 'd' -> s += 13 * e
-            str[i] == 'e' -> s += 14 * e
-            str[i] == 'f' -> s += 15 * e
-            str[i] == 'g' -> s += 16 * e
-            str[i] == 'h' -> s += 17 * e
-            str[i] == 'i' -> s += 18 * e
-            str[i] == 'j' -> s += 19 * e
-            str[i] == 'k' -> s += 20 * e
-            str[i] == 'l' -> s += 21 * e
-            str[i] == 'm' -> s += 22 * e
-            str[i] == 'n' -> s += 23 * e
-            str[i] == 'o' -> s += 24 * e
-            str[i] == 'p' -> s += 25 * e
-            str[i] == 'q' -> s += 26 * e
-            str[i] == 'r' -> s += 27 * e
-            str[i] == 's' -> s += 28 * e
-            str[i] == 't' -> s += 29 * e
-            str[i] == 'y' -> s += 30 * e
-            str[i] == 'u' -> s += 31 * e
-            str[i] == 'w' -> s += 32 * e
-            str[i] == 'x' -> s += 33 * e
-            str[i] == 'y' -> s += 34 * e
-            str[i] == 'z' -> s += 35 * e
-        }
+        val e = pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
+        if ((str[i].toInt() - 48) < 10)
+            s += (str[i].toInt() - 48) * e
+        else
+            s += (str[i].toInt() - 87) * e
     }
     return s
 }
@@ -344,24 +309,26 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var s = ""
-    val letters = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
-    val numbers = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    val s = StringBuilder()
+    val letters = mapOf(1 to Pair(1, "I"), 2 to Pair(4, "IV"), 3 to Pair(5, "V"),
+            4 to Pair(9, "IX"), 5 to Pair(10, "X"), 6 to Pair(40, "XL"),
+            7 to Pair(50, "L"), 8 to Pair(90, "XC"), 9 to Pair(100, "C"),
+            10 to Pair(400, "CD"), 11 to Pair(500, "D"), 12 to Pair(900, "CM"), 13 to Pair(1000, "M"))
     var g = n
     while (g / 1000 > 0) {
-        s += letters.last()
-        g -= numbers.last()
+        s.append(letters[13]?.second)
+        g -= 1000
     }
     while (g > 0) {
-        for (i in 0 until numbers.size) {
-            if (numbers[i] > g) {
-                g -= numbers[i - 1]
-                s += letters[i - 1]
+        for (i in 1..letters.size) {
+            if ((letters[i]?.first) ?: 0 > g) {
+                g -= (letters[i - 1]?.first) ?: 0
+                s.append(letters[i - 1]?.second)
                 break
             }
         }
     }
-    return s
+    return s.toString()
 }
 
 /**
@@ -381,34 +348,50 @@ fun russianNumber(n: Int): String = when {
     n == 6 -> "шесть"
     n == 7 -> "семь"
     n == 8 -> "восемь"
-    n == 9 -> "девять"
-    else -> "crash"
+    else -> "девять"
 }
 
 
+fun russianHundreds(n:Int): String {
+    val highDigit = n / 100
+    if (highDigit!= 0)
+   return when (highDigit) {
+         1 ->  "сто "
+         2 ->  "двести "
+         3 ->  "триста "
+        4 ->  "четыреста "
+        else ->  russianNumber(n / 100) + "сот "
+    }
+    else return ""
+}
+
 fun russianPart(n: Int): String {
     var s = ""
-    when {n / 100 == 1 -> s += "сто "
-        n / 100 == 2 -> s += "двести "
-        n / 100 == 3 -> s += "триста "
-        n / 100 == 4 -> s += "четыреста "
-        n / 100 > 4 -> s += russianNumber(n / 100) + "сот "
+    val highDigit = n / 100
+    val lastDigits = n % 100
+    val lastSymbol = n % 100 / 10
+    when {
+        highDigit == 1 -> s += "сто "
+        highDigit == 2 -> s += "двести "
+        highDigit == 3 -> s += "триста "
+        highDigit == 4 -> s += "четыреста "
+        highDigit > 4 -> s += russianNumber(n / 100) + "сот "
     }
     when {
-        n % 100 == 10 -> s += "десять "
-        n % 100 == 11 -> s += "одинадцать "
-        n % 100 == 12 -> s += "двенадцать "
-        n % 100 == 13 -> s += "тринадцать "
-        n % 100 == 14 -> s += "четырнадцать "
-        n % 100 == 15 -> s += "пятнадцать "
-        n % 100 == 16 -> s += "шестнадцать "
-        n % 100 == 17 -> s += "семнадцать "
-        n % 100 == 18 -> s += "восемнадцать "
-        n % 100 == 19 -> s += "девятнадцать "
-        (n % 100 / 10 == 2) || (n % 100 / 10 == 3) -> s += russianNumber(n % 100 / 10) + "дцать "
-        n % 100 / 10 == 4 -> s += "сорок "
-        ((n % 100 / 10 > 4) && (n % 100 / 10 < 9)) -> s += russianNumber(n % 100 / 10) + "десят "
-        n % 100 / 10 == 9 -> s += "девяносто "
+        lastDigits == 10 -> s += "десять "
+        lastDigits == 11 -> s += "одинадцать "
+        lastDigits == 12 -> s += "двенадцать "
+        lastDigits == 13 -> s += "тринадцать "
+        lastDigits == 14 -> s += "четырнадцать "
+        lastDigits == 15 -> s += "пятнадцать "
+        lastDigits == 16 -> s += "шестнадцать "
+        lastDigits == 17 -> s += "семнадцать "
+        lastDigits == 18 -> s += "восемнадцать "
+        lastDigits == 19 -> s += "девятнадцать "
+        (lastSymbol == 2) || (lastSymbol == 3) -> s += russianNumber(n % 100 / 10) + "дцать "
+        lastSymbol == 4 -> s += "сорок "
+        ((lastSymbol > 4) && (lastSymbol < 9)) -> s += russianNumber(n % 100 / 10) + "десят "
+        lastSymbol == 9 -> s += "девяносто "
     }
     return s
 }
@@ -423,17 +406,18 @@ fun russian(n: Int): String {
             else -> s += russianNumber(n / 1000 % 10) + " "
         }
         if ((n / 1000 % 100 > 10) && (n / 1000 % 100 < 20)) s += "тысяч"
-        else when {
-            n / 1000 % 10 == 0 -> s += "тысяч"
-            n / 1000 % 10 == 1 -> s += "тысяча"
-            n / 1000 % 10 == 2 -> s += "тысячи"
-            n / 1000 % 10 == 3 -> s += "тысячи"
-            n / 1000 % 10 == 4 -> s += "тысячи"
-            n / 1000 % 10 > 4 -> s += "тысяч"
+        else when (n / 1000 % 10) {
+            0 -> s += "тысяч"
+            1 -> s += "тысяча"
+            2 -> s += "тысячи"
+            3 -> s += "тысячи"
+            4 -> s += "тысячи"
+            else -> s += "тысяч"
         }
     }
     if ((n % 1000 != 0) && (n / 1000 != 0)) s += " " + russianPart(n % 1000) + russianNumber(n % 10)
-    if ((n % 1000 != 0) && (n / 1000 == 0) && ((n % 100 > 9) && (n % 100) < 20)) s += when {
+    if ((n % 1000 != 0) && (n / 1000 == 0) && ((n % 100 > 9) && (n % 100) < 20))
+        s += russianHundreds(n%1000/100) + when {
         n % 100 == 10 -> "десять"
         n % 100 == 11 -> "одинадцать"
         n % 100 == 12 -> "двенадцать"
@@ -443,9 +427,11 @@ fun russian(n: Int): String {
         n % 100 == 16 -> "шестнадцать"
         n % 100 == 17 -> "семнадцать"
         n % 100 == 18 -> "восемнадцать"
-        n % 100 == 19 -> "девятнадцать"
-        else -> "crash"
+        else -> "девятнадцать"
     } else
-        if ((n % 1000 != 0) && (n / 1000 == 0)) s += russianPart(n % 1000) + if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19)) russianNumber(n % 10) else ""
+        if ((n % 1000 != 0) && (n / 1000 == 0))
+            s += russianPart(n % 1000) + if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19))
+                russianNumber(n % 10)
+            else ""
     return s
 }
