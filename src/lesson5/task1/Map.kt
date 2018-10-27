@@ -153,9 +153,9 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  */
 /*Not done*/
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    var a= mutableMapOf<String, Double>()
-    stockPrices.map { name ->  }
-return a
+    val a = mutableMapOf<String, Double>()
+    stockPrices.map { name -> }
+    return a
 }
 
 /**
@@ -202,7 +202,21 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val a = mutableMapOf<String, MutableSet<String>>()
+
+    for ((name, people) in friends) {
+        if (people != null)
+            a[name] = people.toMutableSet() else
+            a[name] = emptySet<String>().toMutableSet()
+    }
+    for ((name, friend) in a)
+        for ((friendName, newFriends) in a)
+            if ((friendName != name) && (friend.contains(friendName)))
+                friend += newFriends
+
+    return a
+}
 
 /**
  * Простая
@@ -267,12 +281,12 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    var s=0
+    var s = 0
     for (word in words) if (words.contains(word.reversed())) {
         s++
         break
     }
-    return s>0
+    return s > 0
 }
 
 /**
@@ -292,7 +306,16 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    var a = Pair(-1, -1)
+    for (i in 0..(list.size - 1))
+        for (j in i + 1 until list.size)
+            if (list[i] + list[j] == number) {
+                a = Pair(i, j)
+                break
+            }
+    return a
+}
 
 /**
  * Очень сложная

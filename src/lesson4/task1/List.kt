@@ -7,6 +7,7 @@ import lesson1.task1.discriminant
 import lesson3.task1.isPrime
 import lesson3.task1.minDivisor
 import java.lang.Math.pow
+import java.lang.StringBuilder
 import kotlin.math.sqrt
 
 /**
@@ -126,10 +127,10 @@ fun abs(v: List<Double>): Double = sqrt(v.map { it * it }.sum())
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    if (list.size != 0) return list.sum() / list.size
-    else return 0.0
-}
+fun mean(list: List<Double>): Double =
+        if (list.isNotEmpty()) list.sum() / list.size
+        else 0.0
+
 
 /**
  * Средняя
@@ -139,7 +140,11 @@ fun mean(list: List<Double>): Double {
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = (list.map { it - mean(list) }).toMutableList()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val m = mean(list)
+    for (i in 0 until list.size) list[i] -= m
+    return list
+}
 
 /**
  * Средняя
@@ -150,7 +155,7 @@ fun center(list: MutableList<Double>): MutableList<Double> = (list.map { it - me
  */
 fun times(a: List<Double>, b: List<Double>): Double {
     var s = 0.0
-    for (i in 0..a.size - 1)
+    for (i in 0 until a.size)
         s += a[i] * b[i]
     return s
 }
@@ -165,10 +170,8 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var px = 0.0
-    var n = 0.0
     for (i in 0 until p.size) {
-        px += p[i] * power(x, n)
-        n++
+        px += p[i] * power(x, i.toDouble())
     }
     return px
 }
@@ -228,12 +231,13 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     val s = mutableListOf<Int>()
     var a = n
-    if (n == 0) {
-        return emptyList()
+    if (n < base) {
+        return (s + a)
     } else
-        while (a > 0) {
+        while (a > base) {
             s.add(a % base)
             a /= base
+            if ((a < base) && (a != 0)) s.add(a)
         }
     return s.reversed()
 }
@@ -247,43 +251,19 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var s = ""
+    val s = StringBuilder()
     var a = n
-    if (n == 0) s += 0
+    val alphabet = "abcdefghijklmnopqrstuvwxyz"
+    if (n == 0) s.append(0)
     else
         while (a > 0) {
-            if (a % base < 10) s += (a % base)
-            else when {
-                a % base == 10 -> s += "a"
-                a % base == 11 -> s += "b"
-                a % base == 12 -> s += "c"
-                a % base == 13 -> s += "d"
-                a % base == 14 -> s += "e"
-                a % base == 15 -> s += "f"
-                a % base == 16 -> s += "g"
-                a % base == 17 -> s += "h"
-                a % base == 18 -> s += "i"
-                a % base == 19 -> s += "j"
-                a % base == 20 -> s += "k"
-                a % base == 21 -> s += "l"
-                a % base == 22 -> s += "m"
-                a % base == 23 -> s += "n"
-                a % base == 24 -> s += "o"
-                a % base == 25 -> s += "p"
-                a % base == 26 -> s += "q"
-                a % base == 27 -> s += "r"
-                a % base == 28 -> s += "s"
-                a % base == 29 -> s += "t"
-                a % base == 30 -> s += "u"
-                a % base == 31 -> s += "v"
-                a % base == 32 -> s += "w"
-                a % base == 33 -> s += "x"
-                a % base == 34 -> s += "y"
-                else -> s += "z"
+            when {
+                a % base < 10 -> s.append(a % base)
+                a % base > 10 -> s.append(alphabet[a % base - 10])
             }
             a /= base
         }
-    return s.reversed()
+    return s.toString().reversed()
 }
 
 /**

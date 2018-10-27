@@ -75,12 +75,12 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var s = abs(n)
     var g = 0
-    if (abs(n) < 10) return 1 else {
+    return if (abs(n) < 10) 1 else {
         while (s > 0) {
             s /= 10
             g += 1
         }
-        return g
+        g
     }
 }
 
@@ -127,7 +127,7 @@ fun lcm(m: Int, n: Int): Int {
 fun minDivisor(n: Int): Int {
     if (isPrime(n) == false) {
         var x = 2
-        for (i in 2..sqrt(n.toDouble()).toInt()) while (n % x != 0) x += 1
+        for (i in 2..floor(sqrt(n.toDouble())).toInt()) while (n % x != 0) x += 1
         return x
     } else return n
 }
@@ -148,15 +148,15 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     var x = 2
-    var c = 0
+    var c = true
     for (i in 1 until min(m, n)) {
         if ((n % x == 0) && (m % x == 0)) {
-            c++
+            c = false
             break
         }
         x++
     }
-    return (c == 0)
+    return c
 }
 
 /**
@@ -206,7 +206,7 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var s = x % (2 * PI)
+    var s = abs(x % (2 * PI))
     var g = 3.0
     var n = 1
     val j = x % (2 * PI)
@@ -229,18 +229,7 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double {
-    var s = x % (2 * PI) + (PI / 2)
-    var g = 2
-    var n = 1
-    while ((pow(x % (2 * PI) + (PI / 2), g.toDouble())) / factorial(g) >= eps) {
-        if (n % 2 != 0)
-            s -= (pow(x % (2 * PI) + (PI / 2), g.toDouble())) / factorial(g) else
-            s += (pow(x % (2 * PI) + (PI / 2), g.toDouble())) / factorial(g)
-        g += 2; n++
-    }
-    return s
-}
+fun cos(x: Double, eps: Double): Double = sqrt(1 - sqr(sin(x, eps)))
 
 /**
  * Средняя
