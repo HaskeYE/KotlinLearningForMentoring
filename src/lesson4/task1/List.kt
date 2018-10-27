@@ -352,16 +352,16 @@ fun russianNumber(n: Int): String = when {
 }
 
 
-fun russianHundreds(n:Int): String {
+fun russianHundreds(n: Int): String {
     val highDigit = n / 100
-    if (highDigit!= 0)
-   return when (highDigit) {
-         1 ->  "сто "
-         2 ->  "двести "
-         3 ->  "триста "
-        4 ->  "четыреста "
-        else ->  russianNumber(n / 100) + "сот "
-    }
+    if (highDigit != 0)
+        return when (highDigit) {
+            1 -> "сто "
+            2 -> "двести "
+            3 -> "триста "
+            4 -> "четыреста "
+            else -> russianNumber(n / 100) + "сот "
+        }
     else return ""
 }
 
@@ -417,18 +417,18 @@ fun russian(n: Int): String {
     }
     if ((n % 1000 != 0) && (n / 1000 != 0)) s += " " + russianPart(n % 1000) + russianNumber(n % 10)
     if ((n % 1000 != 0) && (n / 1000 == 0) && ((n % 100 > 9) && (n % 100) < 20))
-        s += russianHundreds(n%1000/100) + when {
-        n % 100 == 10 -> "десять"
-        n % 100 == 11 -> "одинадцать"
-        n % 100 == 12 -> "двенадцать"
-        n % 100 == 13 -> "тринадцать"
-        n % 100 == 14 -> "четырнадцать"
-        n % 100 == 15 -> "пятнадцать"
-        n % 100 == 16 -> "шестнадцать"
-        n % 100 == 17 -> "семнадцать"
-        n % 100 == 18 -> "восемнадцать"
-        else -> "девятнадцать"
-    } else
+        s += russianHundreds(n % 1000 / 100) + when {
+            n % 100 == 10 -> "десять"
+            n % 100 == 11 -> "одинадцать"
+            n % 100 == 12 -> "двенадцать"
+            n % 100 == 13 -> "тринадцать"
+            n % 100 == 14 -> "четырнадцать"
+            n % 100 == 15 -> "пятнадцать"
+            n % 100 == 16 -> "шестнадцать"
+            n % 100 == 17 -> "семнадцать"
+            n % 100 == 18 -> "восемнадцать"
+            else -> "девятнадцать"
+        } else
         if ((n % 1000 != 0) && (n / 1000 == 0))
             s += russianPart(n % 1000) + if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19))
                 russianNumber(n % 10)
