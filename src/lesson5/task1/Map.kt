@@ -384,8 +384,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         useFactor.add(j)
         g = 0.0
     }
-    //variable for saving first picked treasure name
+    //variable for saving first and last picked treasure names
     var firsT = ""
+    var lasT = ""
 
     //variables for saving next step values and const
     val stableTr = mutableSetOf<String>()
@@ -413,14 +414,16 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 price += treasures[name]?.second ?: 0
             }
         //choosing next step
-        if (price > oldPrice) {
+        if (price >= oldPrice) {
             oldTr = newTr
             oldPrice = price
+        } else if (stableTr.contains(lasT)) {
         } else {
-            stableTr.add(firsT)
+            stableTr.add(lasT)
             capLeft -= treasures[treasure]?.first ?: 0
             oldPrice -= treasures[treasure]?.second ?: 0
         }
+        if (treasure == firsT) lasT = treasure
         useFactor.remove(treasure)
     }
     return (stableTr + oldTr)
