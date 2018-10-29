@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.lang.Double.MAX_VALUE
+
 /**
  * Пример
  *
@@ -154,7 +156,17 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
 /*Not done*/
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val a = mutableMapOf<String, Double>()
-    stockPrices.map { name -> }
+    val repeats = mutableMapOf<String, Int>()
+    for ((name, price) in stockPrices) {
+        if (a[name] != null) {
+            a[name] = a[name] ?: 0 + price
+            repeats[name] = (repeats[name] ?: 0) + 1
+        } else {
+            a[name] = price
+            repeats[name] = 1
+        }
+    }
+    a.forEach { (name, price) -> a[name] = price / (repeats[name] ?: 1) }
     return a
 }
 
@@ -336,4 +348,80 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+
+
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> /*{
+    var useFactor = mutableMapOf<String, Double>()
+    var s = emptyList<String>()
+    var capLeft = capacity.toDouble()
+    for ((treasure, chars) in treasures)
+        useFactor[treasure] = (chars.second / chars.first).toDouble()
+    useFactor.values.sorted()
+        for ((treasure, _) in useFactor)
+        if ((treasures[treasure]?.first ?: break) <= capLeft) {
+            s += treasure
+            capLeft -= (treasures[treasure]?.first ?: break)
+        } else
+            if ((treasures[treasure]?.first ?: break) <= capacity) {
+//Not finished yet
+            }
+    return s.toSet()
+}*/ {
+    val useFactor = mutableListOf<String>()
+    var capLeft = capacity.toDouble()
+    var j = ""
+    var g = 0.0
+    //Building list of treasures
+    //by descending of utility ratio
+    for ((_, _) in treasures) {
+        for ((treasure, char) in treasures)
+            if ((char.second / char.first).toDouble() > g)
+                if (useFactor.contains(treasure)) {
+                } else {
+                    g = (char.second / char.first).toDouble()
+                    j = treasure
+                }
+        useFactor.add(j)
+        g = 0.0
+    }
+    //variable for saving first picked treasure name
+    var firsT = ""
+
+    //variables for saving next step values and const
+    val stableTr = mutableSetOf<String>()
+    var oldTr = mutableSetOf<String>()
+    var oldPrice = 0.0
+
+    //taking the most valuable first and then
+    //trying to make more useful combination
+
+    for (treasure in useFactor) {
+        var price = 0.0
+        val newTr = mutableSetOf<String>()
+        var capNewLeft = capLeft
+        //Finding the first taken treasure
+        for (name in useFactor)
+            if ((treasures[name]?.first ?: 0) < capNewLeft) {
+                firsT = name
+                break
+            }
+        //making new treasure list
+        for (name in useFactor)
+            if ((treasures[name]?.first ?: 0) < capNewLeft) {
+                newTr.add(name)
+                capNewLeft -= treasures[name]?.first ?: 0
+                price += treasures[name]?.second ?: 0
+            }
+        //choosing next step
+        if (price > oldPrice) {
+            oldTr = newTr
+            oldPrice = price
+        } else {
+            stableTr.add(firsT)
+            capLeft -= treasures[treasure]?.first ?: 0
+            oldPrice -= treasures[treasure]?.second ?: 0
+        }
+        useFactor.remove(treasure)
+    }
+    return (stableTr + oldTr)
+}
