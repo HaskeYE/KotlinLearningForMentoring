@@ -127,7 +127,7 @@ fun lcm(m: Int, n: Int): Int {
 fun minDivisor(n: Int): Int {
     if (isPrime(n) == false) {
         var x = 2
-        for (i in 2..floor(sqrt(n.toDouble())).toInt()) while (n % x != 0) x += 1
+        for (i in 2..(floor(sqrt(n.toDouble())/2)).toInt()) while (n % x != 0) x += 1
         return x
     } else return n
 }
@@ -147,14 +147,12 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var x = 2
     var c = true
-    for (i in 1 until min(m, n)) {
-        if ((n % x == 0) && (m % x == 0)) {
+    for (i in 2..(min( min(m, n), (max(m,n)/2)))) {
+        if ((n % i == 0) && (m % i == 0)) {
             c = false
             break
         }
-        x++
     }
     return c
 }
@@ -218,7 +216,7 @@ fun sin(x: Double, eps: Double): Double {
             g += 2
             n++
         }
-        return s
+        return if (x<0) -s else s
     } else return s
 }
 
