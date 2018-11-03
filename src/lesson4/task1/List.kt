@@ -386,17 +386,11 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russianNumber(n: Int): String = when {
-    n == 0 -> ""
-    n == 1 -> "один"
-    n == 2 -> "два"
-    n == 3 -> "три"
-    n == 4 -> "четыре"
-    n == 5 -> "пять"
-    n == 6 -> "шесть"
-    n == 7 -> "семь"
-    n == 8 -> "восемь"
-    else -> "девять"
+fun russianNumber(n: Int): String {
+    val s = mapOf(0 to "", 1 to "один", 2 to "два", 3 to "три",
+            4 to "четыре", 5 to "пять", 6 to "шесть", 7 to "семь",
+            8 to "восемь", 9 to "девять")
+    return (s[n] ?: "error")
 }
 
 
@@ -414,72 +408,75 @@ fun russianHundreds(n: Int): String {
 }
 
 fun russianPart(n: Int): String {
-    var s = ""
+    val s = StringBuilder()
     val highDigit = n / 100
     val lastDigits = n % 100
     val lastSymbol = n % 100 / 10
     when {
-        highDigit == 1 -> s += "сто "
-        highDigit == 2 -> s += "двести "
-        highDigit == 3 -> s += "триста "
-        highDigit == 4 -> s += "четыреста "
-        highDigit > 4 -> s += russianNumber(n / 100) + "сот "
+        highDigit == 1 -> s.append("сто ")
+        highDigit == 2 -> s.append("двести ")
+        highDigit == 3 -> s.append("триста ")
+        highDigit == 4 -> s.append("четыреста ")
+        highDigit > 4 -> s.append(russianNumber(n / 100) + "сот ")
     }
     when {
-        lastDigits == 10 -> s += "десять "
-        lastDigits == 11 -> s += "одинадцать "
-        lastDigits == 12 -> s += "двенадцать "
-        lastDigits == 13 -> s += "тринадцать "
-        lastDigits == 14 -> s += "четырнадцать "
-        lastDigits == 15 -> s += "пятнадцать "
-        lastDigits == 16 -> s += "шестнадцать "
-        lastDigits == 17 -> s += "семнадцать "
-        lastDigits == 18 -> s += "восемнадцать "
-        lastDigits == 19 -> s += "девятнадцать "
-        (lastSymbol == 2) || (lastSymbol == 3) -> s += russianNumber(n % 100 / 10) + "дцать "
-        lastSymbol == 4 -> s += "сорок "
-        ((lastSymbol > 4) && (lastSymbol < 9)) -> s += russianNumber(n % 100 / 10) + "десят "
-        lastSymbol == 9 -> s += "девяносто "
+        lastDigits == 10 -> s.append("десять")
+        lastDigits == 11 -> s.append("одинадцать")
+        lastDigits == 12 -> s.append("двенадцать")
+        lastDigits == 13 -> s.append("тринадцать")
+        lastDigits == 14 -> s.append("четырнадцать")
+        lastDigits == 15 -> s.append("пятнадцать")
+        lastDigits == 16 -> s.append("шестнадцать")
+        lastDigits == 17 -> s.append("семнадцать")
+        lastDigits == 18 -> s.append("восемнадцать")
+        lastDigits == 19 -> s.append("девятнадцать")
+        (lastSymbol == 2) || (lastSymbol == 3) -> s.append(russianNumber(n % 100 / 10) + "дцать ")
+        lastSymbol == 4 -> s.append("сорок ")
+        ((lastSymbol > 4) && (lastSymbol < 9)) -> s.append(russianNumber(n % 100 / 10) + "десят ")
+        lastSymbol == 9 -> s.append("девяносто ")
     }
-    return s
+    return s.toString()
 }
 
 fun russian(n: Int): String {
-    var s = ""
+    val s = StringBuilder()
     if (n / 1000 != 0) {
-        s += russianPart(n / 1000)
+        s.append(russianPart(n / 1000))
         if ((n / 1000 % 100 > 0) && ((n / 1000 % 100 < 11) || (n / 1000 % 100) > 19)) when {
-            n / 1000 % 10 == 1 -> s += "одна "
-            n / 1000 % 10 == 2 -> s += "две "
-            else -> s += russianNumber(n / 1000 % 10) + " "
+            n / 1000 % 10 == 1 -> s.append("одна ")
+            n / 1000 % 10 == 2 -> s.append("две ")
+            else -> s.append(russianNumber(n / 1000 % 10) + " ")
         }
-        if ((n / 1000 % 100 > 10) && (n / 1000 % 100 < 20)) s += "тысяч"
+        if ((n / 1000 % 100 > 10) && (n / 1000 % 100 < 20)) s.append(" тысяч")
         else when (n / 1000 % 10) {
-            0 -> s += "тысяч"
-            1 -> s += "тысяча"
-            2 -> s += "тысячи"
-            3 -> s += "тысячи"
-            4 -> s += "тысячи"
-            else -> s += "тысяч"
+            0 -> s.append("тысяч")
+            1 -> s.append("тысяча")
+            2, 3, 4 -> s.append("тысячи")
+            else -> s.append("тысяч")
         }
     }
-    if ((n % 1000 != 0) && (n / 1000 != 0)) s += " " + russianPart(n % 1000) + russianNumber(n % 10)
-    if ((n % 1000 != 0) && (n / 1000 == 0) && ((n % 100 > 9) && (n % 100) < 20))
-        s += russianHundreds(n % 1000 / 100) + when {
-            n % 100 == 10 -> "десять"
-            n % 100 == 11 -> "одинадцать"
-            n % 100 == 12 -> "двенадцать"
-            n % 100 == 13 -> "тринадцать"
-            n % 100 == 14 -> "четырнадцать"
-            n % 100 == 15 -> "пятнадцать"
-            n % 100 == 16 -> "шестнадцать"
-            n % 100 == 17 -> "семнадцать"
-            n % 100 == 18 -> "восемнадцать"
-            else -> "девятнадцать"
-        } else
-        if ((n % 1000 != 0) && (n / 1000 == 0))
-            s += russianPart(n % 1000) + if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19))
-                russianNumber(n % 10)
-            else ""
-    return s
+    if ((n % 1000 != 0) && (n / 1000 != 0)) {
+        s.append(" ")
+        if ((n % 100 > 9) && (n % 100) < 20)
+            s.append(russianHundreds(n % 1000 / 100) + when {
+                n % 100 == 10 -> "десять"
+                n % 100 == 11 -> "одинадцать"
+                n % 100 == 12 -> "двенадцать"
+                n % 100 == 13 -> "тринадцать"
+                n % 100 == 14 -> "четырнадцать"
+                n % 100 == 15 -> "пятнадцать"
+                n % 100 == 16 -> "шестнадцать"
+                n % 100 == 17 -> "семнадцать"
+                n % 100 == 18 -> "восемнадцать"
+                else -> "девятнадцать"
+            })
+        else
+            s.append(russianPart(n % 1000) + russianNumber(n % 10))
+    } else
+        if ((n % 1000 != 0) && (n / 1000 == 0)) {
+            s.append(russianPart(n % 1000))
+            if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19))
+                s.append(russianNumber(n % 10))
+        }
+    return s.toString()
 }
