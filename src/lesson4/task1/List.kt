@@ -234,7 +234,7 @@ fun convert(n: Int, base: Int): List<Int> {
     if (n < base) {
         return (s + a)
     } else
-        while (a > base) {
+        while (a >= base) {
             s.add(a % base)
             a /= base
             if ((a < base) && (a != 0)) s.add(a)
@@ -253,12 +253,16 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     val s = StringBuilder()
     var a = n
-    if (n == 0) s.append(0)
+    if (n == 0) when {
+        n < 10 -> s.append(n)
+        n >= 10 -> s.append((n + 87).toChar())
+    }
     else
         while (a > 0) {
+            val number = a % base
             when {
-                a % base < 10 -> s.append(a % base)
-                a % base > 10 -> s.append((a % base + 87).toChar())
+                number < 10 -> s.append(number)
+                number >= 10 -> s.append((number + 87).toChar())
             }
             a /= base
         }
@@ -291,11 +295,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
 fun decimalFromString(str: String, base: Int): Int {
     var s = 0
     for (i in 0 until str.length) {
+        val n = str[i].toInt() - 48
         val e = pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
-        if ((str[i].toInt() - 48) < 10)
+        if (n < 10)
             s += (str[i].toInt() - 48) * e
         else
-            s += (str[i].toInt() - 87) * e
+            s += (n - 39) * e
     }
     return s
 }
@@ -310,21 +315,64 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     val s = StringBuilder()
-    val letters = mapOf(1 to Pair(1, "I"), 2 to Pair(4, "IV"), 3 to Pair(5, "V"),
-            4 to Pair(9, "IX"), 5 to Pair(10, "X"), 6 to Pair(40, "XL"),
-            7 to Pair(50, "L"), 8 to Pair(90, "XC"), 9 to Pair(100, "C"),
-            10 to Pair(400, "CD"), 11 to Pair(500, "D"), 12 to Pair(900, "CM"), 13 to Pair(1000, "M"))
+    val letters = mapOf(1 to "I", 4 to "IV", 5 to "V",
+            9 to "IX", 10 to "X", 40 to "XL",
+            50 to "L", 90 to "XC", 100 to "C",
+            400 to "CD", 500 to "D", 900 to "CM", 1000 to "M")
     var g = n
     while (g / 1000 > 0) {
-        s.append(letters[13]?.second)
+        s.append(letters[1000])
         g -= 1000
     }
     while (g > 0) {
-        for (i in 1..letters.size) {
-            if ((letters[i]?.first) ?: 0 > g) {
-                g -= (letters[i - 1]?.first) ?: 0
-                s.append(letters[i - 1]?.second)
-                break
+        when {
+            g >= 900 -> {
+                g -= 900
+                s.append(letters[900])
+            }
+            g >= 500 -> {
+                g -= 500
+                s.append(letters[500])
+            }
+            g >= 400 -> {
+                g -= 400
+                s.append(letters[400])
+            }
+            g >= 100 -> {
+                g -= 100
+                s.append(letters[100])
+            }
+            g >= 90 -> {
+                g -= 90
+                s.append(letters[90])
+            }
+            g >= 50 -> {
+                g -= 50
+                s.append(letters[50])
+            }
+            g >= 40 -> {
+                g -= 40
+                s.append(letters[40])
+            }
+            g >= 10 -> {
+                g -= 10
+                s.append(letters[10])
+            }
+            g >= 9 -> {
+                g -= 9
+                s.append(letters[9])
+            }
+            g >= 5 -> {
+                g -= 5
+                s.append(letters[5])
+            }
+            g >= 4 -> {
+                g -= 4
+                s.append(letters[4])
+            }
+            else -> {
+                g -= 1
+                s.append(letters[1])
             }
         }
     }
