@@ -159,8 +159,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val repeats = mutableMapOf<String, Int>()
     for ((name, price) in stockPrices) {
         if (a[name] != null) {
-            a[name] = a[name] ?: 0 + price
-            repeats[name] = (repeats[name] ?: 0) + 1
+            a[name] = a[name]!! + price
+            repeats[name] = repeats[name]!! + 1
         } else {
             a[name] = price
             repeats[name] = 1
@@ -216,9 +216,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val a = mutableMapOf<String, MutableSet<String>>()
-
     for ((name, people) in friends) {
-        if (people != null)
+        if (people != emptySet<String>())
             a[name] = people.toMutableSet() else
             a[name] = emptySet<String>().toMutableSet()
     }
@@ -350,23 +349,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 
 
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> /*{
-    var useFactor = mutableMapOf<String, Double>()
-    var s = emptyList<String>()
-    var capLeft = capacity.toDouble()
-    for ((treasure, chars) in treasures)
-        useFactor[treasure] = (chars.second / chars.first).toDouble()
-    useFactor.values.sorted()
-        for ((treasure, _) in useFactor)
-        if ((treasures[treasure]?.first ?: break) <= capLeft) {
-            s += treasure
-            capLeft -= (treasures[treasure]?.first ?: break)
-        } else
-            if ((treasures[treasure]?.first ?: break) <= capacity) {
-//Not finished yet
-            }
-    return s.toSet()
-}*/ {
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String>  {
     val useFactor = mutableListOf<String>()
     var capLeft = capacity.toDouble()
     var j = ""

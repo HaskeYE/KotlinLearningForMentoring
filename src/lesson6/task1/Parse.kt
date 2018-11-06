@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 /**
  * Пример
  *
@@ -49,12 +51,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -71,7 +71,40 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val date = str.split(" ")
+    var month = -1
+    try {
+        val year = date.last().toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    try {
+        val day = date.first().toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    for (dates in date) when (dates) {
+        "января" -> month = 1
+        "февраля" -> month = 2
+        "марта" -> month = 3
+        "апреля" -> month = 4
+        "мая" -> month = 5
+        "июня" -> month = 6
+        "июля" -> month = 7
+        "августа" -> month = 8
+        "сентября" -> month = 9
+        "октября" -> month = 10
+        "ноября" -> month = 11
+        "февраля" -> month = 12
+    }
+    if (month == -1) return ""
+    if (daysInMonth(month, date.last().toInt()) < date.first().toInt())
+        return ""
+    return String.format("%02d.%02d.%d", date.first().toInt(),
+            month, date.last().toInt())
+}
+
 
 /**
  * Средняя
@@ -83,7 +116,39 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val date = digital.split(" ")
+    var month = -1
+    try {
+        val year = date.last().toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    try {
+        val day = date.first().toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    for (dates in date) when (dates) {
+        "января" -> month = 1
+        "февраля" -> month = 2
+        "марта" -> month = 3
+        "апреля" -> month = 4
+        "мая" -> month = 5
+        "июня" -> month = 6
+        "июля" -> month = 7
+        "августа" -> month = 8
+        "сентября" -> month = 9
+        "октября" -> month = 10
+        "ноября" -> month = 11
+        "февраля" -> month = 12
+    }
+    if (month == -1) return ""
+    if (daysInMonth(month, date.last().toInt()) < date.first().toInt())
+        return ""
+    return String.format("%02d.%02d.%d", date.first().toInt(),
+            month, date.last().toInt())
+}
 
 /**
  * Средняя
