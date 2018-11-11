@@ -4,7 +4,6 @@ package lesson4.task1
 
 import com.sun.org.apache.xalan.internal.lib.ExsltMath.power
 import lesson1.task1.discriminant
-import lesson3.task1.isPrime
 import lesson3.task1.minDivisor
 import java.lang.Math.pow
 import java.lang.StringBuilder
@@ -279,7 +278,7 @@ fun convertToString(n: Int, base: Int): String {
 fun decimal(digits: List<Int>, base: Int): Int {
     var s = 0
     for (i in 0 until digits.size)
-        s += digits[i] * Math.pow(base.toDouble(), (digits.size - i - 1).toDouble()).toInt()
+        s += digits[i] * pow(base.toDouble(), (digits.size - i - 1).toDouble()).toInt()
     return s
 }
 
@@ -478,5 +477,6 @@ fun russian(n: Int): String {
             if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19))
                 s.append(russianNumber(n % 10))
         }
+    if ((n%1000 != 0)&&(n%10 == 0)) s.delete(s.length-1,s.length)
     return s.toString()
 }
