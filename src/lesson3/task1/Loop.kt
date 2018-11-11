@@ -125,11 +125,10 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    if (isPrime(n) == false) {
-        var x = 2
-        for (i in 2..(floor(sqrt(n.toDouble()) / 2)).toInt()) while (n % x != 0) x += 1
-        return x
-    } else return n
+    var x = 2
+    for (i in 2..(floor(sqrt(n.toDouble()) / 2)).toInt())
+        while (n % x != 0) x += 1
+    return if (n % x == 0) x else n
 }
 
 /**
@@ -148,7 +147,7 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     var c = true
-    for (i in 2..(min(min(m, n), (max(m, n) / 2)))) {
+    for (i in 2..(min(min(m, n), ((max(m, n) / 2))))) {
         if ((n % i == 0) && (m % i == 0)) {
             c = false
             break
@@ -208,16 +207,15 @@ fun sin(x: Double, eps: Double): Double {
     var g = 3.0
     var n = 1
     val j = abs(x % (2 * PI))
-    if (s > 0) {
-        while ((pow(j, g)) / factorial(g.toInt()) >= eps) {
-            if (n % 2 != 0)
-                s -= ((pow(j, g)) / factorial(g.toInt())) else
-                s += ((pow(j, g)) / factorial(g.toInt()))
-            g += 2
-            n++
-        }
-        return if (x < 0) -s else s
-    } else return s
+    while ((pow(j, g)) / factorial(g.toInt()) >= eps) {
+        if (n % 2 != 0)
+            s -= ((pow(j, g)) / factorial(g.toInt())) else
+            s += ((pow(j, g)) / factorial(g.toInt()))
+        g += 2
+        n++
+    }
+    return if (x < 0) -s else s
+
 }
 
 /**
@@ -227,7 +225,7 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = sqrt(1 - sqr(sin(x, eps)))
+fun cos(x: Double, eps: Double): Double = (sin(x + PI / 2, eps))
 
 /**
  * Средняя
