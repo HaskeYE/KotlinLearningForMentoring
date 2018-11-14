@@ -74,6 +74,7 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     var month = -1
+    if (date.size > 3) return ""
     try {
         val year = date.last().toInt()
     } catch (e: NumberFormatException) {
@@ -96,7 +97,7 @@ fun dateStrToDigit(str: String): String {
         "сентября" -> month = 9
         "октября" -> month = 10
         "ноября" -> month = 11
-        "февраля" -> month = 12
+        "декабря" -> month = 12
     }
     if (month == -1) return ""
     if (daysInMonth(month, date.last().toInt()) < date.first().toInt())
@@ -117,8 +118,9 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val date = digital.split(" ")
-    var month = -1
+    val date = digital.split(".")
+    var month = date[1]
+    if (date.size > 3) return ""
     try {
         val year = date.last().toInt()
     } catch (e: NumberFormatException) {
@@ -129,24 +131,24 @@ fun dateDigitToStr(digital: String): String {
     } catch (e: NumberFormatException) {
         return ""
     }
-    for (dates in date) when (dates) {
-        "января" -> month = 1
-        "февраля" -> month = 2
-        "марта" -> month = 3
-        "апреля" -> month = 4
-        "мая" -> month = 5
-        "июня" -> month = 6
-        "июля" -> month = 7
-        "августа" -> month = 8
-        "сентября" -> month = 9
-        "октября" -> month = 10
-        "ноября" -> month = 11
-        "февраля" -> month = 12
+    when (date[1].toInt()) {
+        1 -> month = "января"
+        2 -> month = "февраля"
+        3 -> month = "марта"
+        4 -> month = "апреля"
+        5 -> month = "мая"
+        6 -> month = "июня"
+        7 -> month = "июля"
+        8 -> month = "августа"
+        9 -> month = "сентября"
+        10 -> month = "октября"
+        11 -> month = "ноября"
+        12 -> month = "февраля"
     }
-    if (month == -1) return ""
-    if (daysInMonth(month, date.last().toInt()) < date.first().toInt())
+    if (month == date[1]) return ""
+    if (daysInMonth(date[1].toInt(), date.last().toInt()) < date.first().toInt())
         return ""
-    return String.format("%02d.%02d.%d", date.first().toInt(),
+    return String.format("%d %s %d", date.first().toInt(),
             month, date.last().toInt())
 }
 
