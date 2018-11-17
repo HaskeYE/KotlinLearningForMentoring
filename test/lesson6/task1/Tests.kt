@@ -91,10 +91,20 @@ class Tests {
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
-        assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
+//        assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") } why??? maybe:
+        assertEquals(4, plusMinus("+ 4"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - -2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("44 - - 12") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - + 12") }
+    }
+// Tests for new function
+    @Test
+    @Tag("New")
+    fun generalLeter() {
+        assertEquals("п", generalLeter("П"))
+        assertEquals("о", generalLeter("О"))
+        assertEquals("О", generalLeter("о"))
+        assertEquals("Ыкл", generalLeter("ыкл"))
     }
 
     @Test

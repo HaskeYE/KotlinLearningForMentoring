@@ -3,6 +3,8 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.lang.IllegalArgumentException
+import java.lang.StringBuilder
 
 /**
  * Пример
@@ -164,7 +166,41 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val s = StringBuilder()
+    var n = 0
+    var b = true
+    for (symbol in phone) {
+        when (symbol) {
+            '+' -> if (n == 0) {
+                s.append("+")
+                n++
+            }
+            '-' -> {
+            }
+            '(' -> {
+            }
+            ')' -> {
+            }
+            '1' -> s.append(1)
+            '0' -> s.append(0)
+            '2' -> s.append(2)
+            '3' -> s.append(3)
+            '4' -> s.append(4)
+            '5' -> s.append(5)
+            '6' -> s.append(6)
+            '7' -> s.append(7)
+            '8' -> s.append(8)
+            '9' -> s.append(9)
+            ' ' -> {
+
+            }
+            else -> b = false
+        }
+        if (b == false) break
+    }
+    return if (b) s.toString() else ""
+}
 
 /**
  * Средняя
@@ -176,7 +212,22 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val s = jumps.split(" ")
+    var max = -1
+    for (result in s) {
+        if ((result != "-") && (result != "%")) {
+            try {
+                val res = result.toInt()
+            } catch (e: NumberFormatException) {
+                return -1
+            }
+            if (result.toInt() > max)
+                max = result.toInt()
+        }
+    }
+    return max
+}
 
 /**
  * Сложная
@@ -188,7 +239,27 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val s = jumps.split(" ")
+    var max = -1
+    for (i in 0 until s.size step 2) {
+        try {
+            val height = s[i].toInt()
+        } catch (e: NumberFormatException) {
+            return -1
+        }
+        if (s[i + 1].contains("+") ||
+                s[i + 1].contains("%") ||
+                s[i + 1].contains("-")) {
+            if (s[i + 1].contains("+"))
+                max = s[i].toInt()
+        } else {
+            max = -1
+            break
+        }
+    }
+    return max
+}
 
 /**
  * Сложная
@@ -199,7 +270,77 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val s = expression.split(" ")
+    var summ = 0
+    var j: Int
+    when {
+        s[0] == "-" -> {
+            try {
+                val n = s[1].toInt()
+            } catch (e: IllegalArgumentException) {
+                throw e
+            }
+            summ -= s[1].toInt()
+             j = 1
+        }
+        s[0] == "+" -> {
+            try {
+                val n = s[1].toInt()
+            } catch (e: IllegalArgumentException) {
+                throw e
+            }
+            summ += s[1].toInt()
+            j = 1
+        }
+        else -> {
+            if (s[0].toInt().toString() == s[0])
+                try {
+                    val n = s[0].toInt()
+                } catch (e: IllegalArgumentException) {
+                    throw e
+                }
+            else try {
+                val n = "+".toInt()
+            } catch (e: IllegalArgumentException) {
+                throw e
+            }
+            summ += s[0].toInt()
+             j = 0
+        }
+    }
+    if (s.size >= 3)
+        for (i in j + 1 until s.size step 2)
+            when {
+                s[i] == "-" -> {
+                    if ((s[i + 1].toInt().toString() != s[i + 1]) ||
+                            (s[i + 1].toInt() < 0))
+                        try {
+                            val n = "+".toInt()
+                        } catch (e: IllegalArgumentException) {
+                            throw e
+                        }
+                    summ -= s[i + 1].toInt()
+
+                }
+                s[i] == "+" -> {
+                    if ((s[i + 1].toInt().toString() != s[i + 1]) ||
+                            (s[i + 1].toInt() < 0))
+                        try {
+                            val n = "+".toInt()
+                        } catch (e: IllegalArgumentException) {
+                            throw e
+                        }
+                    summ += s[i + 1].toInt()
+                }
+                else -> try {
+                    val n = "+".toInt()
+                } catch (e: IllegalArgumentException) {
+                    throw e
+                }
+            }
+    return summ
+}
 
 /**
  * Сложная
@@ -210,7 +351,32 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+
+fun generalLeter(string: String): String {
+    val s = StringBuilder()
+    val first = string.first()
+    val small = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+    val big = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+    if (small.contains(first))
+        s.append(big[small.indexOf(first)])
+    if (big.contains(first))
+        s.append(small[big.indexOf(first)])
+    if (string.length > 1)
+    s.append(string, 1, string.length)
+    return s.toString()
+}
+
+fun firstDuplicateIndex(str: String): Int {
+    val s = str.split(" ")
+    var number = 0
+    for (i in 0 until (s.size-1)) {
+        val word = generalLeter(s[i])
+        if ((word == s[i + 1]) || (s[i] == s[i + 1]))
+            return number else
+            number += s[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная
@@ -223,7 +389,33 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    var maxVal = 0.0
+    var goodH = ""
+    val s = description.split("; ")
+    if (s[0]=="") return ""
+    for (good in s) {
+        val n = good.split(" ")
+        val price = n[1].split(".")
+        if (price.size != 2) try {
+            val g = "+".toInt()
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+        val priceN = String.format("%d.%d", price[0].toInt(), price[1].toInt())
+        if ((n.size < 2) || (priceN != n[1]))
+            try {
+                val g = "+".toInt()
+            } catch (e: NumberFormatException) {
+                return ""
+            }
+        if ((price[0].toInt() + price[1].toDouble()/10) > maxVal) {
+            goodH = n[0]
+            maxVal = (price[0].toInt() + price[1].toDouble()/10)
+        }
+}
+    return goodH
+}
 
 /**
  * Сложная
