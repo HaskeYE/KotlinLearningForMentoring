@@ -5,6 +5,7 @@ package lesson6.task1
 import lesson2.task2.daysInMonth
 import java.lang.IllegalArgumentException
 import java.lang.StringBuilder
+import kotlin.math.floor
 
 /**
  * Пример
@@ -282,7 +283,7 @@ fun plusMinus(expression: String): Int {
                 throw e
             }
             summ -= s[1].toInt()
-             j = 1
+            j = 1
         }
         s[0] == "+" -> {
             try {
@@ -306,7 +307,7 @@ fun plusMinus(expression: String): Int {
                 throw e
             }
             summ += s[0].toInt()
-             j = 0
+            j = 0
         }
     }
     if (s.size >= 3)
@@ -362,14 +363,14 @@ fun generalLeter(string: String): String {
     if (big.contains(first))
         s.append(small[big.indexOf(first)])
     if (string.length > 1)
-    s.append(string, 1, string.length)
+        s.append(string, 1, string.length)
     return s.toString()
 }
 
 fun firstDuplicateIndex(str: String): Int {
     val s = str.split(" ")
     var number = 0
-    for (i in 0 until (s.size-1)) {
+    for (i in 0 until (s.size - 1)) {
         val word = generalLeter(s[i])
         if ((word == s[i + 1]) || (s[i] == s[i + 1]))
             return number else
@@ -393,7 +394,7 @@ fun mostExpensive(description: String): String {
     var maxVal = 0.0
     var goodH = ""
     val s = description.split("; ")
-    if (s[0]=="") return ""
+    if (s[0] == "") return ""
     for (good in s) {
         val n = good.split(" ")
         val price = n[1].split(".")
@@ -409,11 +410,11 @@ fun mostExpensive(description: String): String {
             } catch (e: NumberFormatException) {
                 return ""
             }
-        if ((price[0].toInt() + price[1].toDouble()/10) > maxVal) {
+        if ((price[0].toInt() + price[1].toDouble() / 10) > maxVal) {
             goodH = n[0]
-            maxVal = (price[0].toInt() + price[1].toDouble()/10)
+            maxVal = (price[0].toInt() + price[1].toDouble() / 10)
         }
-}
+    }
     return goodH
 }
 
@@ -428,7 +429,48 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+
+
+fun fromRoman(roman: String): Int {
+    var s = 0
+    var b = false
+    var hop = 0
+    var values = listOf(1, 4, 5,
+            9, 10, 40,
+            50, 90, 100,
+            400, 500, 900, 1000)
+    var letters = listOf("I", "IV", "V",
+            "IX", "X", "XL",
+            "L", "XC", "C",
+            "CD", "D", "CM", "M")
+    var i = 1
+    for (g in 0 until roman.length) {
+        b = false
+        for (j in i..13) {
+            if (roman[g].toString() == letters[letters.size - j]) {
+                s += values[values.size - j]
+                i = j
+                b = true
+            }
+            if (((g + 1) <= roman.length - 1) && !b) {
+                val n = (roman[g].toString() + roman[g + 1].toString())
+                if (n == letters[letters.size - j]) {
+                    s += values[values.size - j]
+                    i = j
+                    b = true
+                    hop = 2
+                }
+            }
+            if (hop >= 1) {
+                b = true
+                hop -= 1
+            }
+            if (b) break
+        }
+        if (!b) break
+    }
+    return if (b) s else -1
+}
 
 /**
  * Очень сложная
@@ -466,4 +508,103 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    val list = mutableListOf<Int>()
+    var loopList = mutableListOf<Int>()
+    var hop = 0
+    var currCom = 0
+    var passCounter = 0
+    var cell = floor(cells.toDouble() / 2).toInt()
+    if (commands.contains(Regex("""[^><\-+\[\] ]""")))
+        try {
+            var e = "+".toInt()
+        } catch (s: IllegalArgumentException) {
+            throw s
+        }
+    if (commands.contains(Regex("""\[+(?!\])""")))
+        try {
+            var e = "+".toInt()
+        } catch (s: IllegalArgumentException) {
+            throw s
+        }
+    for (i in 0 until cells) list.add(i,0)
+    while ((hop < limit) && (currCom < commands.length)) {
+        when (commands[currCom]) {
+            ' ' -> {
+                hop++
+                currCom++
+            }
+            '>' -> if (passCounter == 0) {
+                if (cell == list.size - 1) {
+                    try {
+                        cell++
+                    } catch (e: IllegalStateException) {
+                        throw e
+                    }
+                } else {
+                    cell++
+                    currCom++
+                }
+            } else {
+                hop++
+                currCom++
+            }
+            '<' -> if (passCounter == 0) {
+                if (cell == 0) {
+                    try {
+                        cell -= 1
+                    } catch (e: IllegalStateException) {
+                        throw e
+                    }
+                } else
+                    cell -= 1
+            } else {
+                hop++
+                currCom++
+            }
+            '+' -> if (passCounter == 0) {
+                list[cell]++
+                hop++
+                currCom++
+            } else {
+                hop++
+                currCom++
+            }
+            '-' -> if (passCounter == 0) {
+                list[cell] -= 1
+                hop++
+                currCom++
+            } else {
+                hop++
+                currCom++
+            }
+            '[' -> if (list[cell] == 0) {
+                passCounter++ //Need to pass next symbols
+                hop++
+                currCom++
+            } else {
+                loopList.add(currCom)
+                hop++
+                currCom++
+            }
+            ']' -> if (passCounter != 0) {
+                passCounter -= 1
+                hop++
+                currCom++
+            } else {
+                if (list[cell] == 0) {
+                    loopList.remove(loopList.last())
+                    hop++
+                    currCom++
+                } else {
+                    currCom = loopList.last() + 1
+                    hop++
+                }
+            }
+        }
+    }
+    return list
+}
+//Исполнитель каждый раз при значении под ']' равном не нулю будет возвращаться к элементу следующему после
+// соответсвующей '['. Значение счётчика сделанных оперций увеличивается даже если мы проходим
+// операции мимо, при нулевом значении '['.
