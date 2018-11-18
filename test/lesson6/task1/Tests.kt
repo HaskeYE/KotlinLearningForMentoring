@@ -91,13 +91,28 @@ class Tests {
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
-//        assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") } why??? maybe:
-        assertEquals(4, plusMinus("+ 4"))
+        assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - -2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("44 - - 12") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - + 12") }
     }
-// Tests for new function
+
+    @Test
+    @Tag("Hard")
+    fun plusMinusOther() {
+        assertEquals(0, plusMinusOther("0"))
+        assertEquals(4, plusMinusOther("2 + 2"))
+        assertEquals(6, plusMinusOther("2 + 31 - 40 + 13"))
+        assertEquals(-1, plusMinusOther("0 - 1"))
+        assertThrows(IllegalArgumentException::class.java) { plusMinusOther("+2") }
+//        assertThrows(IllegalArgumentException::class.java) { plusMinusOther("+ 4") } why??? maybe:
+        assertEquals(4, plusMinus("+ 4"))
+        assertThrows(IllegalArgumentException::class.java) { plusMinusOther("4 - -2") }
+        assertThrows(IllegalArgumentException::class.java) { plusMinusOther("44 - - 12") }
+        assertThrows(IllegalArgumentException::class.java) { plusMinusOther("4 - + 12") }
+    }
+
+    // Tests for new function
     @Test
     @Tag("New")
     fun generalLeter() {

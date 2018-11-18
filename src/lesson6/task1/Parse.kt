@@ -271,7 +271,8 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int {
+//Works with first element = +4/-4
+fun plusMinusOther(expression: String): Int {
     val s = expression.split(" ")
     var summ = 0
     var j: Int
@@ -342,7 +343,73 @@ fun plusMinus(expression: String): Int {
             }
     return summ
 }
+fun plusMinus(expression: String): Int {
+    val s = expression.split(" ")
+    var summ = 0
+    var j = 0
+    when {
+        s[0] == "-" -> {
+            try {
+                val n = "+".toInt()
+            } catch (e: IllegalArgumentException) {
+                throw e
+            }
+        }
+        s[0] == "+" -> {
+            try {
+                val n = "+".toInt()
+            } catch (e: IllegalArgumentException) {
+                throw e
+            }
+        }
+        else -> {
+            if (s[0].toInt().toString() == s[0])
+                try {
+                    val n = s[0].toInt()
+                } catch (e: IllegalArgumentException) {
+                    throw e
+                }
+            else try {
+                val n = "+".toInt()
+            } catch (e: IllegalArgumentException) {
+                throw e
+            }
+            summ += s[0].toInt()
+            j = 0
+        }
+    }
+    if (s.size >= 3)
+        for (i in j + 1 until s.size step 2)
+            when {
+                s[i] == "-" -> {
+                    if ((s[i + 1].toInt().toString() != s[i + 1]) ||
+                            (s[i + 1].toInt() < 0))
+                        try {
+                            val n = "+".toInt()
+                        } catch (e: IllegalArgumentException) {
+                            throw e
+                        }
+                    summ -= s[i + 1].toInt()
 
+                }
+                s[i] == "+" -> {
+                    if ((s[i + 1].toInt().toString() != s[i + 1]) ||
+                            (s[i + 1].toInt() < 0))
+                        try {
+                            val n = "+".toInt()
+                        } catch (e: IllegalArgumentException) {
+                            throw e
+                        }
+                    summ += s[i + 1].toInt()
+                }
+                else -> try {
+                    val n = "+".toInt()
+                } catch (e: IllegalArgumentException) {
+                    throw e
+                }
+            }
+    return summ
+}
 /**
  * Сложная
  *
