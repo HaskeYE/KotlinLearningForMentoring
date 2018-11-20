@@ -145,8 +145,15 @@ fun flattenPhoneNumber(phone: String): String {
     var n = 0
     var b = true
     val g = phone.split(" ")
+    if ((g[0].contains('+')) &&
+            (g[1].contains('('))) //Insert...
+        s.append(g[2]..g[g.size - 1])
+    else if (g[0].contains('(')) s.append(g[1]..g[g.size - 1])
+    else s.append(g[0]..g[g.size - 1])
+    s.removeRange(0, s.lastIndex)
     if ((phone.contains(Regex("""\(+(?!\))""")))
-            || (g[2].contains(Regex("""\(+(?!\))"""))) ) return ""
+            || (phone.contains(Regex("""\)+.*+\)""")))
+    || (s.contains(')'))) return ""
     for (symbol in phone) {
         when (symbol) {
             '+' -> if (n == 0) {
