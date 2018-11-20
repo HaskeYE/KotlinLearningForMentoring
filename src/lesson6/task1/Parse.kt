@@ -77,32 +77,18 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     var month = -1
-    if (date.size > 3) return ""
-    try {
-        val year = date.last().toInt()
-    } catch (e: NumberFormatException) {
+    val list = listOf("января", "февраля", "марта",
+            "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября",
+            "ноября", "февраля")
+    if (date.size != 3) return ""
+    if ((date.last().toIntOrNull() == null)
+            || (date.first().toIntOrNull() == null))
         return ""
-    }
-    try {
-        val day = date.first().toInt()
-    } catch (e: NumberFormatException) {
-        return ""
-    }
-    for (dates in date) when (dates) {
-        "января" -> month = 1
-        "февраля" -> month = 2
-        "марта" -> month = 3
-        "апреля" -> month = 4
-        "мая" -> month = 5
-        "июня" -> month = 6
-        "июля" -> month = 7
-        "августа" -> month = 8
-        "сентября" -> month = 9
-        "октября" -> month = 10
-        "ноября" -> month = 11
-        "декабря" -> month = 12
-    }
-    if (month == -1) return ""
+    if (list.contains(date[1]))
+        month = list.indexOf(date[1]) + 1
+    if ((month < 1) || (date.last().toInt() < 1)
+            || (date.last().toInt() < 1)) return ""
     if (daysInMonth(month, date.last().toInt()) < date.first().toInt())
         return ""
     return String.format("%02d.%02d.%d", date.first().toInt(),
@@ -123,31 +109,17 @@ fun dateStrToDigit(str: String): String {
 fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
     var month = date[1]
-    if (date.size > 3) return ""
-    try {
-        val year = date.last().toInt()
-    } catch (e: NumberFormatException) {
+    val list = listOf("января", "февраля", "марта",
+            "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября",
+            "ноября", "февраля")
+    if (date.size != 3) return ""
+    if ((date.last().toIntOrNull() == null)
+            || (date.first().toIntOrNull() == null))
         return ""
-    }
-    try {
-        val day = date.first().toInt()
-    } catch (e: NumberFormatException) {
-        return ""
-    }
-    when (date[1].toInt()) {
-        1 -> month = "января"
-        2 -> month = "февраля"
-        3 -> month = "марта"
-        4 -> month = "апреля"
-        5 -> month = "мая"
-        6 -> month = "июня"
-        7 -> month = "июля"
-        8 -> month = "августа"
-        9 -> month = "сентября"
-        10 -> month = "октября"
-        11 -> month = "ноября"
-        12 -> month = "февраля"
-    }
+    if ((month.toInt() < 1) || (date.last().toInt() < 1)
+            || (date.last().toInt() < 1)) return ""
+    month = list[date[1].toInt() - 1]
     if (month == date[1]) return ""
     if (daysInMonth(date[1].toInt(), date.last().toInt()) < date.first().toInt())
         return ""
@@ -167,10 +139,14 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
+//Not finished at all
 fun flattenPhoneNumber(phone: String): String {
     val s = StringBuilder()
     var n = 0
     var b = true
+    val g = phone.split(" ")
+    if ((phone.contains(Regex("""\(+(?!\))""")))
+            || (g[2].contains(Regex("""\(+(?!\))"""))) ) return ""
     for (symbol in phone) {
         when (symbol) {
             '+' -> if (n == 0) {
@@ -183,22 +159,12 @@ fun flattenPhoneNumber(phone: String): String {
             }
             ')' -> {
             }
-            '1' -> s.append(1)
-            '0' -> s.append(0)
-            '2' -> s.append(2)
-            '3' -> s.append(3)
-            '4' -> s.append(4)
-            '5' -> s.append(5)
-            '6' -> s.append(6)
-            '7' -> s.append(7)
-            '8' -> s.append(8)
-            '9' -> s.append(9)
+            in '1'..'9' -> s.append(symbol)
             ' ' -> {
-
             }
             else -> b = false
         }
-        if (b == false) break
+        if (!b) break
     }
     return if (b) s.toString() else ""
 }
@@ -343,6 +309,7 @@ fun plusMinusOther(expression: String): Int {
             }
     return summ
 }
+
 fun plusMinus(expression: String): Int {
     val s = expression.split(" ")
     var summ = 0
@@ -410,6 +377,7 @@ fun plusMinus(expression: String): Int {
             }
     return summ
 }
+
 /**
  * Сложная
  *
@@ -423,12 +391,8 @@ fun plusMinus(expression: String): Int {
 fun generalLeter(string: String): String {
     val s = StringBuilder()
     val first = string.first()
-    val small = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
-    val big = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
-    if (small.contains(first))
-        s.append(big[small.indexOf(first)])
-    if (big.contains(first))
-        s.append(small[big.indexOf(first)])
+    if (first.isLowerCase()) s.append(first.toUpperCase())
+    else s.append(first.toLowerCase())
     if (string.length > 1)
         s.append(string, 1, string.length)
     return s.toString()
@@ -513,7 +477,7 @@ fun fromRoman(roman: String): Int {
     var i = 1
     for (g in 0 until roman.length) {
         b = false
-        for (j in i..13) {
+        for (j in i..letters.size) {
             if (roman[g].toString() == letters[letters.size - j]) {
                 s += values[values.size - j]
                 i = j
@@ -582,19 +546,16 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var currCom = 0
     var passCounter = 0
     var cell = floor(cells.toDouble() / 2).toInt()
-    if (commands.contains(Regex("""[^><\-+\[\] ]""")))
-        try {
-            var e = "+".toInt()
-        } catch (s: IllegalArgumentException) {
-            throw s
-        }
-    if (commands.contains(Regex("""\[+(?!\])""")))
-        try {
-            var e = "+".toInt()
-        } catch (s: IllegalArgumentException) {
-            throw s
-        }
-    for (i in 0 until cells) list.add(i,0)
+    if ((commands.contains(Regex("""[^><\-+\[\] ]""")))
+            || (commands.contains(Regex("""\[+(?!\])"""))))
+    /*try {
+        var e = "+".toInt()
+    } catch (s: IllegalArgumentException) {
+    */
+        throw IllegalArgumentException("Неверный формат входной строки")
+    //}
+
+    for (i in 0 until cells) list.add(i, 0)
     while ((hop < limit) && (currCom < commands.length)) {
         when (commands[currCom]) {
             ' ' -> {
@@ -603,11 +564,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             }
             '>' -> if (passCounter == 0) {
                 if (cell == list.size - 1) {
-                    try {
-                        cell++
-                    } catch (e: IllegalStateException) {
-                        throw e
-                    }
+                    throw IllegalStateException("Выход за пределы строки")
                 } else {
                     cell++
                     currCom++
@@ -618,11 +575,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             }
             '<' -> if (passCounter == 0) {
                 if (cell == 0) {
-                    try {
-                        cell -= 1
-                    } catch (e: IllegalStateException) {
-                        throw e
-                    }
+                    throw IllegalStateException("Выход за пределы строки")
                 } else
                     cell -= 1
             } else {
