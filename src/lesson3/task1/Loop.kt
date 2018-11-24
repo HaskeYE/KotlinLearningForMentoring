@@ -126,8 +126,8 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var x = 2
-    for (i in 2..(floor(sqrt(n.toDouble()) / 2)).toInt())
-        while (n % x != 0) x += 1
+    for (i in 2..(floor(n.toDouble() / 2)).toInt())
+        while (n % x != 0) x++
     return if (n % x == 0) x else n
 }
 
@@ -147,12 +147,13 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     var c = true
-    for (i in 2..(min(min(m, n), ((max(m, n) / 2))))) {
-        if ((n % i == 0) && (m % i == 0)) {
-            c = false
-            break
+    if (m == n) c = false else
+        for (i in 2..(min(min(m, n), (floor(max(m, n).toDouble() / 2)).toInt()))) {
+            if ((n % i == 0) && (m % i == 0)) {
+                c = false
+                break
+            }
         }
-    }
     return c
 }
 
