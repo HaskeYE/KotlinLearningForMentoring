@@ -41,6 +41,7 @@ class Tests {
         assertEquals("03.04.2011", dateStrToDigit("3 апреля 2011"))
         assertEquals("", dateStrToDigit("32 сентября 2011"))
         assertEquals("", dateStrToDigit("29 февраля 1993"))
+        assertEquals("02.12.2", dateStrToDigit("02 декабря 2"))
     }
 
     @Test
@@ -106,7 +107,7 @@ class Tests {
         assertEquals(-1, plusMinusOther("0 - 1"))
         assertThrows(IllegalArgumentException::class.java) { plusMinusOther("+2") }
 //        assertThrows(IllegalArgumentException::class.java) { plusMinusOther("+ 4") } why??? maybe:
-        assertEquals(4, plusMinus("+ 4"))
+        assertEquals(4, plusMinusOther("+ 4"))
         assertThrows(IllegalArgumentException::class.java) { plusMinusOther("4 - -2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinusOther("44 - - 12") }
         assertThrows(IllegalArgumentException::class.java) { plusMinusOther("4 - + 12") }

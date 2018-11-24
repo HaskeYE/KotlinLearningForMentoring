@@ -77,22 +77,25 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     var month = -1
-    val list = listOf("января", "февраля", "марта",
-            "апреля", "мая", "июня", "июля",
-            "августа", "сентября", "октября",
-            "ноября", "февраля")
-    if (date.size != 3) return ""
+    if (date.size > 3) return ""
     if ((date.last().toIntOrNull() == null)
             || (date.first().toIntOrNull() == null))
         return ""
+    val year = date.last().toInt()
+    val day = date.first().toInt()
+    val list = listOf("января", "февраля", "марта",
+            "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября",
+            "ноября", "декабря")
+    if (date.size != 3) return ""
     if (list.contains(date[1]))
         month = list.indexOf(date[1]) + 1
-    if ((month < 1) || (date.last().toInt() < 1)
-            || (date.last().toInt() < 1)) return ""
-    if (daysInMonth(month, date.last().toInt()) < date.first().toInt())
+    if ((month < 1) || (day < 1)
+            || (year < 1)) return ""
+    if (daysInMonth(month, year) < day)
         return ""
-    return String.format("%02d.%02d.%d", date.first().toInt(),
-            month, date.last().toInt())
+    return String.format("%02d.%02d.%d", day,
+            month, year)
 }
 
 
@@ -108,23 +111,27 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
+    if (date.size > 3) return ""
     var month = date[1]
-    val list = listOf("января", "февраля", "марта",
-            "апреля", "мая", "июня", "июля",
-            "августа", "сентября", "октября",
-            "ноября", "февраля")
-    if (date.size != 3) return ""
     if ((date.last().toIntOrNull() == null)
             || (date.first().toIntOrNull() == null))
         return ""
-    if ((month.toInt() < 1) || (date.last().toInt() < 1)
-            || (date.last().toInt() < 1)) return ""
+    val year = date.last().toInt()
+    val day = date.first().toInt()
+    val list = listOf("января", "февраля", "марта",
+            "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября",
+            "ноября", "декабря")
+    if (date.size != 3) return ""
+    if ((month.toInt() < 1) || (day < 1)
+            || (year < 1)) return ""
+    if (date[1].toInt() !in 1..12) return ""
     month = list[date[1].toInt() - 1]
     if (month == date[1]) return ""
-    if (daysInMonth(date[1].toInt(), date.last().toInt()) < date.first().toInt())
+    if (daysInMonth(date[1].toInt(), year) < day)
         return ""
-    return String.format("%d %s %d", date.first().toInt(),
-            month, date.last().toInt())
+    return String.format("%d %s %d", day,
+            month, year)
 }
 
 /**
@@ -144,16 +151,13 @@ fun flattenPhoneNumber(phone: String): String {
     val s = StringBuilder()
     var n = 0
     var b = true
+    var firstCounter = 0
+    var secondCounter = 0
     val g = phone.split(" ")
-    if ((g[0].contains('+')) &&
-            (g[1].contains('('))) //Insert...
-        s.append(g[2]..g[g.size - 1])
-    else if (g[0].contains('(')) s.append(g[1]..g[g.size - 1])
-    else s.append(g[0]..g[g.size - 1])
-    s.removeRange(0, s.lastIndex)
-    if ((phone.contains(Regex("""\(+(?!\))""")))
-            || (phone.contains(Regex("""\)+.*+\)""")))
-    || (s.contains(')'))) return ""
+    println('0'.toInt())
+    println('9'.toInt())
+    if ((phone[0] == '+') && ((phone[1].toInt() < '0'.toInt())
+                    || (phone[1].toInt() > '9'.toInt()))) return ""
     for (symbol in phone) {
         when (symbol) {
             '+' -> if (n == 0) {
@@ -163,8 +167,12 @@ fun flattenPhoneNumber(phone: String): String {
             '-' -> {
             }
             '(' -> {
+                firstCounter++
+                if (firstCounter > 1) return ""
             }
             ')' -> {
+                secondCounter++
+                if (secondCounter > 1) return ""
             }
             in '1'..'9' -> s.append(symbol)
             ' ' -> {
@@ -173,7 +181,7 @@ fun flattenPhoneNumber(phone: String): String {
         }
         if (!b) break
     }
-    return if (b) s.toString() else ""
+    return if ((b) && (secondCounter == firstCounter)) s.toString() else ""
 }
 
 /**
@@ -192,12 +200,11 @@ fun bestLongJump(jumps: String): Int {
     for (result in s) {
         if ((result != "-") && (result != "%")) {
             try {
-                val res = result.toInt()
+                if (result.toInt() > max)
+                    max = result.toInt()
             } catch (e: NumberFormatException) {
                 return -1
             }
-            if (result.toInt() > max)
-                max = result.toInt()
         }
     }
     return max
@@ -252,36 +259,30 @@ fun plusMinusOther(expression: String): Int {
     when {
         s[0] == "-" -> {
             try {
-                val n = s[1].toInt()
+                summ -= s[1].toInt()
+                j = 1
             } catch (e: IllegalArgumentException) {
                 throw e
             }
-            summ -= s[1].toInt()
-            j = 1
         }
         s[0] == "+" -> {
             try {
-                val n = s[1].toInt()
+                summ += s[1].toInt()
+                j = 1
             } catch (e: IllegalArgumentException) {
                 throw e
             }
-            summ += s[1].toInt()
-            j = 1
         }
         else -> {
             if (s[0].toInt().toString() == s[0])
                 try {
-                    val n = s[0].toInt()
+                    summ += s[0].toInt()
+                    j = 0
                 } catch (e: IllegalArgumentException) {
                     throw e
                 }
-            else try {
-                val n = "+".toInt()
-            } catch (e: IllegalArgumentException) {
-                throw e
-            }
-            summ += s[0].toInt()
-            j = 0
+            else
+                throw IllegalArgumentException()
         }
     }
     if (s.size >= 3)
@@ -290,29 +291,17 @@ fun plusMinusOther(expression: String): Int {
                 s[i] == "-" -> {
                     if ((s[i + 1].toInt().toString() != s[i + 1]) ||
                             (s[i + 1].toInt() < 0))
-                        try {
-                            val n = "+".toInt()
-                        } catch (e: IllegalArgumentException) {
-                            throw e
-                        }
+                        throw IllegalArgumentException()
                     summ -= s[i + 1].toInt()
 
                 }
                 s[i] == "+" -> {
                     if ((s[i + 1].toInt().toString() != s[i + 1]) ||
                             (s[i + 1].toInt() < 0))
-                        try {
-                            val n = "+".toInt()
-                        } catch (e: IllegalArgumentException) {
-                            throw e
-                        }
+                        throw IllegalArgumentException()
                     summ += s[i + 1].toInt()
                 }
-                else -> try {
-                    val n = "+".toInt()
-                } catch (e: IllegalArgumentException) {
-                    throw e
-                }
+                else -> throw IllegalArgumentException()
             }
     return summ
 }
