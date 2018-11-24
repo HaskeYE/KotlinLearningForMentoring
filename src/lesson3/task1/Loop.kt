@@ -126,7 +126,7 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var x = 2
-    for (i in 2..(floor(n.toDouble() / 2)).toInt())
+    for (i in 2..(floor(sqrt(n.toDouble()))).toInt())
         while (n % x != 0) x++
     return if (n % x == 0) x else n
 }

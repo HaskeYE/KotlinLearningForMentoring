@@ -254,14 +254,14 @@ fun convertToString(n: Int, base: Int): String {
     var a = n
     if (n == 0) when {
         n < 10 -> s.append(n)
-        n >= 10 -> s.append((n + 87).toChar())
+        n >= 10 -> s.append((n - 10 + 'a'.toInt()).toChar())
     }
     else
         while (a > 0) {
             val number = a % base
             when {
                 number < 10 -> s.append(number)
-                number >= 10 -> s.append((number + 87).toChar())
+                number >= 10 -> s.append((number - 10 + 'a'.toInt()).toChar())
             }
             a /= base
         }
@@ -294,12 +294,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
 fun decimalFromString(str: String, base: Int): Int {
     var s = 0
     for (i in 0 until str.length) {
-        val n = str[i].toInt() - 48
+        val n = str[i].toInt() - '0'.toInt()
         val e = pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
         if (n < 10)
-            s += (str[i].toInt() - 48) * e
+            s += n * e
         else
-            s += (n - 39) * e
+            s += (n - '0'.toInt() + 9) * e
     }
     return s
 }
@@ -323,57 +323,19 @@ fun roman(n: Int): String {
         s.append(letters[1000])
         g -= 1000
     }
+    var k = 1
     while (g > 0) {
-        when {
-            g >= 900 -> {
-                g -= 900
-                s.append(letters[900])
+        for (key in letters.keys) if (g <= key) {
+            if (g == key) {
+                g -= key
+                s.append(letters[key])
+                break
+            } else {
+                g -= k
+                s.append(letters[k])
+                break
             }
-            g >= 500 -> {
-                g -= 500
-                s.append(letters[500])
-            }
-            g >= 400 -> {
-                g -= 400
-                s.append(letters[400])
-            }
-            g >= 100 -> {
-                g -= 100
-                s.append(letters[100])
-            }
-            g >= 90 -> {
-                g -= 90
-                s.append(letters[90])
-            }
-            g >= 50 -> {
-                g -= 50
-                s.append(letters[50])
-            }
-            g >= 40 -> {
-                g -= 40
-                s.append(letters[40])
-            }
-            g >= 10 -> {
-                g -= 10
-                s.append(letters[10])
-            }
-            g >= 9 -> {
-                g -= 9
-                s.append(letters[9])
-            }
-            g >= 5 -> {
-                g -= 5
-                s.append(letters[5])
-            }
-            g >= 4 -> {
-                g -= 4
-                s.append(letters[4])
-            }
-            else -> {
-                g -= 1
-                s.append(letters[1])
-            }
-        }
+        } else k = key
     }
     return s.toString()
 }
@@ -444,7 +406,9 @@ fun russian(n: Int): String {
         if ((n / 1000 % 100 > 0) && ((n / 1000 % 100 < 11) || (n / 1000 % 100) > 19)) when {
             n / 1000 % 10 == 1 -> s.append("одна ")
             n / 1000 % 10 == 2 -> s.append("две ")
-            else -> s.append(russianNumber(n / 1000 % 10) + " ")
+            else -> s.append(russianNumber(n / 1000 % 10) +
+                    if ((n / 1000 != 0) && (n / 1000 % 10 == 0) &&
+                            (n / 1000 % 100 != 0)) "" else " ")
         }
         if ((n / 1000 % 100 > 10) && (n / 1000 % 100 < 20)) s.append(" тысяч")
         else when (n / 1000 % 10) {
@@ -457,18 +421,7 @@ fun russian(n: Int): String {
     if ((n % 1000 != 0) && (n / 1000 != 0)) {
         s.append(" ")
         if ((n % 100 > 9) && (n % 100) < 20)
-            s.append(russianHundreds(n % 1000 / 100) + when {
-                n % 100 == 10 -> "десять"
-                n % 100 == 11 -> "одинадцать"
-                n % 100 == 12 -> "двенадцать"
-                n % 100 == 13 -> "тринадцать"
-                n % 100 == 14 -> "четырнадцать"
-                n % 100 == 15 -> "пятнадцать"
-                n % 100 == 16 -> "шестнадцать"
-                n % 100 == 17 -> "семнадцать"
-                n % 100 == 18 -> "восемнадцать"
-                else -> "девятнадцать"
-            })
+            s.append(russianHundreds(n % 1000 / 100) + russianPart(n % 100))
         else
             s.append(russianPart(n % 1000) + russianNumber(n % 10))
     } else
@@ -477,6 +430,6 @@ fun russian(n: Int): String {
             if ((n % 100 > 0) && ((n % 100 < 11) || (n % 100) > 19))
                 s.append(russianNumber(n % 10))
         }
-    if ((n%1000 != 0)&&(n%10 == 0)) s.delete(s.length-1,s.length)
+    if ((n % 1000 != 0) && (n % 10 == 0)) s.delete(s.length - 1, s.length)
     return s.toString()
 }
