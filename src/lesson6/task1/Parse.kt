@@ -542,8 +542,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var currCom = 0
     var passCounter = 0
     var cell = floor(cells.toDouble() / 2).toInt()
-    if ((commands.contains(Regex("""[^><\-+\[\] ]""")))
-            || (commands.contains(Regex("""\[+(?!\])"""))))
+    if (commands.contains(Regex("""[^><\-+\[\] ]""")))
     /*try {
         var e = "+".toInt()
     } catch (s: IllegalArgumentException) {
@@ -619,7 +618,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             }
         }
     }
-    return list
+    if (passCounter == 0) return list else
+        throw IllegalArgumentException("Неверный формат входной строки")
+
 }
 //Исполнитель каждый раз при значении под ']' равном не нулю будет возвращаться к элементу следующему после
 // соответсвующей '['. Значение счётчика сделанных оперций увеличивается даже если мы проходим
