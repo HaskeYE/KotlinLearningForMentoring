@@ -421,7 +421,7 @@ fun russian(n: Int): String {
     if ((n % 1000 != 0) && (n / 1000 != 0)) {
         s.append(" ")
         if ((n % 100 > 9) && (n % 100) < 20)
-            s.append(russianHundreds(n % 1000 / 100) + russianPart(n % 100))
+            s.append(russianHundreds(n % 1000) + russianPart(n % 100))
         else
             s.append(russianPart(n % 1000) + russianNumber(n % 10))
     } else
