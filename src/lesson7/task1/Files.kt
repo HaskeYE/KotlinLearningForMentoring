@@ -86,7 +86,7 @@ fun sibilants(inputName: String, outputName: String) {
         for (i in 0 until nextSymbols.size) {
             val wrong = (symbol.toString() + nextSymbols[i]).toRegex()
             val right = symbol.toString() + correctSymbols[i]
-            input.replace(wrong, right)
+            input = input.replace(wrong, right)
         }
     File(outputName).writeText(input)
 }
