@@ -91,7 +91,7 @@ fun dateStrToDigit(str: String): String {
     if (list.contains(date[1]))
         month = list.indexOf(date[1]) + 1
     if ((month < 1) || (day < 1)
-            || (year < 1)) return ""
+            || (year < 0)) return ""
     if (daysInMonth(month, year) < day)
         return ""
     return String.format("%02d.%02d.%d", day,
@@ -111,7 +111,7 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
-    if (date.size > 3) return ""
+    if (date.size != 3) return ""
     var month = date[1]
     if ((date.last().toIntOrNull() == null)
             || (date.first().toIntOrNull() == null))
@@ -122,7 +122,11 @@ fun dateDigitToStr(digital: String): String {
             "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября",
             "ноября", "декабря")
-    if (date.size != 3) return ""
+    try {
+        month.toInt()
+    } catch (e: IllegalArgumentException) {
+        return ""
+    }
     if ((month.toInt() < 1) || (day < 1)
             || (year < 1)) return ""
     if (date[1].toInt() !in 1..12) return ""
@@ -148,14 +152,13 @@ fun dateDigitToStr(digital: String): String {
  */
 //Not finished at all
 fun flattenPhoneNumber(phone: String): String {
+    if (phone == "") return ""
     val s = StringBuilder()
     var n = 0
     var b = true
     var firstCounter = 0
     var secondCounter = 0
     val g = phone.split(" ")
-    println('0'.toInt())
-    println('9'.toInt())
     if ((phone[0] == '+') && ((phone[1].toInt() < '0'.toInt())
                     || (phone[1].toInt() > '9'.toInt()))) return ""
     for (symbol in phone) {

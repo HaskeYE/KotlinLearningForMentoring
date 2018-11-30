@@ -329,11 +329,11 @@ fun roman(n: Int): String {
             if (g == key) {
                 g -= key
                 s.append(letters[key])
-                break
             } else {
-                g -= k
-                s.append(letters[k])
-                break
+                while (g >= k) {
+                    g -= k
+                    s.append(letters[k])
+                }
             }
         } else k = key
     }
@@ -382,7 +382,7 @@ fun russianPart(n: Int): String {
     }
     when {
         lastDigits == 10 -> s.append("десять")
-        lastDigits == 11 -> s.append("одинадцать")
+        lastDigits == 11 -> s.append("одиннадцать")
         lastDigits == 12 -> s.append("двенадцать")
         lastDigits == 13 -> s.append("тринадцать")
         lastDigits == 14 -> s.append("четырнадцать")

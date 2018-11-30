@@ -118,15 +118,12 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val mapS = mutableMapOf<Int, List<String>>()
-    for (gradeCurr in grades.values) {
-        val listS = mutableListOf<String>()
-        for ((name, grade) in grades) {
-            if (grade == gradeCurr) listS.add(name)
-        }
-        listS.sortDescending()
-        mapS[gradeCurr] = listS
-    }
-    return mapS.toMap()
+    for ((name, grade) in grades)
+        if (mapS.containsKey(grade)) {
+            mapS[grade] = mapS[grade]!! + name
+        } else mapS[grade] = emptyList<String>() + name
+    for ((key, value) in mapS) mapS[key] = value.sortedDescending()
+    return mapS
 }
 
 /**
@@ -277,6 +274,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     val neWord = mutableSetOf<Char>()
+    if (word == "") return true
     for (letter in word) neWord.add(letter.toLowerCase())
     return (neWord == chars.toSet())
 }
@@ -310,17 +308,17 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    var s = false
-    val a = mutableListOf<MutableList<Char>>()
+    var b = false
+    val anagrams = mutableSetOf<MutableList<Char>>()
     for (word in words) {
         val newSet = word.toMutableList()
         newSet.sort()
-        if (a.contains(newSet)) {
-            s = true
+        if (anagrams.contains(newSet)) {
+            b = true
             break
-        } else a.add(newSet)
+        } else anagrams.add(newSet)
     }
-    return s
+    return b
 }
 
 /**
