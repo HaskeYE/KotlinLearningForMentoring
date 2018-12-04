@@ -377,16 +377,23 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     //Building list of treasures
     //by descending of utility ratio
     for ((_, _) in treasures) {
+        var m = 0
         for ((treasure, char) in treasures)
             if ((char.second.toDouble() / char.first) > g)
                 if (useFactor.contains(treasure)) {
                 } else {
                     g = (char.second / char.first).toDouble()
                     j = treasure
+                    m = char.first
                 }
         useFactor.add(j)
         g = 0.0
+        mass += m
     }
+
+    //super-possibility to take all treasures
+    if (mass < capacity) return useFactor.toSet()
+
     //variable for saving first and last picked treasure names
     var firsT = ""
     var lasT = ""

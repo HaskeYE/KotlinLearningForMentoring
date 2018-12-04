@@ -314,36 +314,23 @@ fun plusMinusOther(expression: String): Int {
 fun plusMinus(expression: String): Int {
     val s = expression.split(" ")
     var summ = 0
-    var j = 0
+    val j: Int
     if (expression.contains(Regex("""[^\d-+ ]""")))
         throw IllegalArgumentException()
     when {
-        s[0] == "-" -> {
-            try {
-                val n = "+".toInt()
-            } catch (e: IllegalArgumentException) {
-                throw e
-            }
-        }
-        s[0] == "+" -> {
-            try {
-                val n = "+".toInt()
-            } catch (e: IllegalArgumentException) {
-                throw e
-            }
-        }
+        s[0] == "-" ->
+            throw IllegalArgumentException()
+        s[0] == "+" ->
+            throw IllegalArgumentException()
         else -> {
             if (s[0].toInt().toString() == s[0])
                 try {
-                    val n = s[0].toInt()
+                    s[0].toInt()
                 } catch (e: IllegalArgumentException) {
                     throw e
                 }
-            else try {
-                val n = "+".toInt()
-            } catch (e: IllegalArgumentException) {
-                throw e
-            }
+            else
+                throw IllegalArgumentException()
             summ += s[0].toInt()
             j = 0
         }
@@ -354,29 +341,17 @@ fun plusMinus(expression: String): Int {
                 s[i] == "-" -> {
                     if ((s[i + 1].toInt().toString() != s[i + 1]) ||
                             (s[i + 1].toInt() < 0))
-                        try {
-                            val n = "+".toInt()
-                        } catch (e: IllegalArgumentException) {
-                            throw e
-                        }
+                        throw IllegalArgumentException()
                     summ -= s[i + 1].toInt()
-
                 }
                 s[i] == "+" -> {
                     if ((s[i + 1].toInt().toString() != s[i + 1]) ||
                             (s[i + 1].toInt() < 0))
-                        try {
-                            val n = "+".toInt()
-                        } catch (e: IllegalArgumentException) {
-                            throw e
-                        }
+                        throw IllegalArgumentException()
                     summ += s[i + 1].toInt()
                 }
-                else -> try {
-                    val n = "+".toInt()
-                } catch (e: IllegalArgumentException) {
-                    throw e
-                }
+                else ->
+                    throw IllegalArgumentException()
             }
     return summ
 }
@@ -432,18 +407,11 @@ fun mostExpensive(description: String): String {
     for (good in s) {
         val n = good.split(" ")
         val price = n[1].split(".")
-        if (price.size != 2) try {
-            val g = "+".toInt()
-        } catch (e: NumberFormatException) {
+        if (price.size != 2)
             return ""
-        }
         val priceN = String.format("%d.%d", price[0].toInt(), price[1].toInt())
         if ((n.size < 2) || (priceN != n[1]))
-            try {
-                val g = "+".toInt()
-            } catch (e: NumberFormatException) {
-                return ""
-            }
+            return ""
         if ((price[0].toInt() + price[1].toDouble() / 10) > maxVal) {
             goodH = n[0]
             maxVal = (price[0].toInt() + price[1].toDouble() / 10)
@@ -469,11 +437,11 @@ fun fromRoman(roman: String): Int {
     var s = 0
     var b = false
     var hop = 0
-    var values = listOf(1, 4, 5,
+    val values = listOf(1, 4, 5,
             9, 10, 40,
             50, 90, 100,
             400, 500, 900, 1000)
-    var letters = listOf("I", "IV", "V",
+    val letters = listOf("I", "IV", "V",
             "IX", "X", "XL",
             "L", "XC", "C",
             "CD", "D", "CM", "M")
@@ -544,7 +512,7 @@ fun fromRoman(roman: String): Int {
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     val list = mutableListOf<Int>()
-    var loopList = mutableListOf<Int>()
+    val loopList = mutableListOf<Int>()
     var hop = 0
     var currCom = 0
     var passCounter = 0
