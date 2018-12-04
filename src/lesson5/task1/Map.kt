@@ -276,7 +276,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     val neWord = mutableSetOf<Char>()
     if (word == "") return true
     for (letter in word) neWord.add(letter.toLowerCase())
-    return (neWord == chars.toSet())
+    return (chars.toSet().containsAll(neWord))
 }
 
 
@@ -373,11 +373,12 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var capLeft = capacity.toDouble()
     var j = ""
     var g = 0.0
+    var mass = 0
     //Building list of treasures
     //by descending of utility ratio
     for ((_, _) in treasures) {
         for ((treasure, char) in treasures)
-            if ((char.second / char.first).toDouble() > g)
+            if ((char.second.toDouble() / char.first) > g)
                 if (useFactor.contains(treasure)) {
                 } else {
                     g = (char.second / char.first).toDouble()
@@ -404,16 +405,16 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         var capNewLeft = capLeft
         //Finding the first taken treasure
         for (name in useFactor)
-            if ((treasures[name]?.first ?: 0) < capNewLeft) {
+            if ((treasures[name]!!.first) < capNewLeft) {
                 firsT = name
                 break
             }
         //making new treasure list
         for (name in useFactor)
-            if ((treasures[name]?.first ?: 0) < capNewLeft) {
+            if ((treasures[name]!!.first) < capNewLeft) {
                 newTr.add(name)
-                capNewLeft -= treasures[name]?.first ?: 0
-                price += treasures[name]?.second ?: 0
+                capNewLeft -= treasures[name]!!.first
+                price += treasures[name]!!.second
             }
         //choosing next step
         if (price >= oldPrice) {
@@ -422,8 +423,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         } else if (stableTr.contains(lasT)) {
         } else {
             stableTr.add(lasT)
-            capLeft -= treasures[treasure]?.first ?: 0
-            oldPrice -= treasures[treasure]?.second ?: 0
+            capLeft -= treasures[treasure]!!.first
+            oldPrice -= treasures[treasure]!!.second
         }
         if (treasure == firsT) lasT = treasure
         useFactor.remove(treasure)
