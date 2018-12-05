@@ -4,6 +4,7 @@ package lesson6.task1
 
 import lesson2.task2.daysInMonth
 import java.lang.IllegalArgumentException
+import java.lang.Math.pow
 import java.lang.StringBuilder
 import kotlin.math.floor
 
@@ -67,7 +68,9 @@ fun dateTest(date: List<String>, month: Int): Boolean {
     val day = date.first().toInt()
     return ((date.size != 3) || ((date.last().toIntOrNull() == null)
             || (date.first().toIntOrNull() == null)) || ((day < 1)
-            || (year < 0)) || (daysInMonth(month, year) < day))
+            || (year < 0)) || (daysInMonth(month, year) < day)
+            || (date[0].contains(Regex("""^0-9""")))
+            || (date[2].contains(Regex("""^0-9"""))))
 
 }
 
@@ -96,6 +99,7 @@ fun dateStrToDigit(str: String): String {
         month = list.indexOf(date[1]) + 1
     if (month < 1) return ""
     if (dateTest(date, month)) return ""
+    if (date[1].contains(Regex("""^0-9"""))) return ""
     return String.format("%02d.%02d.%d", day,
             month, year)
 }
@@ -317,6 +321,8 @@ fun plusMinus(expression: String): Int {
     val j: Int
     if (expression.contains(Regex("""[^\d-+ ]""")))
         throw IllegalArgumentException()
+    if (expression == "")
+        throw IllegalArgumentException()
     when {
         s[0] == "-" ->
             throw IllegalArgumentException()
@@ -412,7 +418,8 @@ fun mostExpensive(description: String): String {
         val priceN = String.format("%d.%d", price[0].toInt(), price[1].toInt())
         if ((n.size < 2) || (priceN != n[1]))
             return ""
-        if ((price[0].toInt() + price[1].toDouble() / 10) > maxVal) {
+        if ((price[0].toInt() + price[1].toDouble() /
+                        pow(10.0, price[1].length.toDouble())) > maxVal) {
             goodH = n[0]
             maxVal = (price[0].toInt() + price[1].toDouble() / 10)
         }
