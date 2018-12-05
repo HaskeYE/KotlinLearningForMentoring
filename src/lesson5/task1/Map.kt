@@ -274,9 +274,11 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     val neWord = mutableSetOf<Char>()
+    val s = mutableSetOf<Char>()
+    for (char in chars) s.add(char.toLowerCase())
     if (word == "") return true
     for (letter in word) neWord.add(letter.toLowerCase())
-    return (chars.toSet().containsAll(neWord))
+    return (s.containsAll(neWord))
 }
 
 
