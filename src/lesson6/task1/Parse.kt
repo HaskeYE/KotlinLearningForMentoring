@@ -5,6 +5,7 @@ package lesson6.task1
 import lesson2.task2.daysInMonth
 import java.lang.IllegalArgumentException
 import java.lang.Math.pow
+import java.lang.NumberFormatException
 import java.lang.StringBuilder
 import kotlin.math.floor
 
@@ -66,7 +67,7 @@ fun main(args: Array<String>) {
 fun dateTest(date: List<String>, month: Int): Boolean {
     val year = date.last().toInt()
     val day = date.first().toInt()
-    return ((date.size != 3) || ((date.last().toIntOrNull() == null)
+    return (((date.last().toIntOrNull() == null)
             || (date.first().toIntOrNull() == null)) || ((day < 1)
             || (year < 0)) || (daysInMonth(month, year) < day)
             || (date[0].contains(Regex("""^0-9""")))
@@ -87,6 +88,7 @@ fun dateTest(date: List<String>, month: Int): Boolean {
  */
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
+    if (date.size != 3) return ""
     var month = -1
     val year = date.last().toInt()
     val day = date.first().toInt()
@@ -94,7 +96,6 @@ fun dateStrToDigit(str: String): String {
             "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября",
             "ноября", "декабря")
-    if (date.size != 3) return ""
     if (list.contains(date[1]))
         month = list.indexOf(date[1]) + 1
     if (month < 1) return ""
@@ -117,13 +118,11 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
+    if (date.size != 3) return ""
     var month = date[1]
-    try {
-        date.first().toInt()
-        date.last().toInt()
-    } catch (e: NumberFormatException) {
+    if ((date.first().toIntOrNull() == null)
+            || (date.last().toIntOrNull() == null))
         return ""
-    }
     val year = date.last().toInt()
     val day = date.first().toInt()
     val list = listOf("января", "февраля", "марта",
@@ -138,7 +137,6 @@ fun dateDigitToStr(digital: String): String {
     if (month.toInt() < 1) return ""
     if (date[1].toInt() !in 1..12) return ""
     month = list[date[1].toInt() - 1]
-    if (month == date[1]) return ""
     if (dateTest(date, date[1].toInt())) return ""
     return String.format("%d %s %d", day,
             month, year)
@@ -161,6 +159,7 @@ fun flattenPhoneNumber(phone: String): String {
     val s = StringBuilder()
     var n = 0
     var b = true
+    if (phone.contains(Regex("""\+.*\+"""))) return ""
     var firstCounter = 0
     var secondCounter = 0
     if (phone[0] == '+' && phone.length == 1) return ""
@@ -179,6 +178,7 @@ fun flattenPhoneNumber(phone: String): String {
                 if (firstCounter > 1) return ""
             }
             ')' -> {
+                if (firstCounter == 0) return ""
                 secondCounter++
                 if (secondCounter > 1) return ""
             }
@@ -207,12 +207,9 @@ fun bestLongJump(jumps: String): Int {
     var max = -1
     for (result in s) {
         if ((result != "-") && (result != "%")) {
-            try {
-                if (result.toInt() > max)
-                    max = result.toInt()
-            } catch (e: NumberFormatException) {
-                return -1
-            }
+            if (result.toIntOrNull() == null) return -1
+            if (result.toInt() > max)
+                max = result.toInt()
         }
     }
     return max
@@ -231,15 +228,11 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     val s = jumps.split(" ")
     var max = -1
+    if (s.size % 2 != 0) return -1
     for (i in 0 until s.size step 2) {
-        try {
-            s[i].toInt()
-        } catch (e: NumberFormatException) {
+        if (s[i].toIntOrNull() == null)
             return -1
-        }
-        if (s[i + 1].contains('+') ||
-                s[i + 1].contains('%') ||
-                s[i + 1].contains('-')) {
+        if (!s[i + 1].contains(Regex("""[^+\-%]"""))) {
             if ((s[i + 1].contains('+')) &&
                     (s[i].toInt() > max))
                 max = s[i].toInt()
@@ -341,8 +334,14 @@ fun plusMinus(expression: String): Int {
             j = 0
         }
     }
+
     if (s.size >= 3)
-        for (i in j + 1 until s.size step 2)
+        for (i in j + 1 until s.size step 2) {
+         /*   try {
+                s[i + 1].toInt()
+            } catch (e: NumberFormatException) {
+                throw e
+            }*/
             when {
                 s[i] == "-" -> {
                     if ((s[i + 1].toInt().toString() != s[i + 1]) ||
@@ -358,7 +357,7 @@ fun plusMinus(expression: String): Int {
                 }
                 else ->
                     throw IllegalArgumentException()
-            }
+            }}
     return summ
 }
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import java.lang.NumberFormatException
 
 class Tests {
     @Test
@@ -50,6 +51,10 @@ class Tests {
     @Tag("Normal")
     fun dateDigitToStr() {
         assertEquals("", dateDigitToStr("28.солнечного.1976"))
+        assertEquals("", dateDigitToStr(" })icjEAF~+.?*+O XNewOx,av" +
+                "kI5MtI4;P\\nv1h;S1Lr+PF/cyQBA@z/`S).u~HaPNN7us[\\nO LSmHZ!YfZq?GtINX" +
+                "[~NVC0|wK}76V.^Tks*1Jw3`3U\\t.yh-/j\\nS\\n=y<!E^FcD\$\\\\ As}s\\nb>(W\\" +
+                "\\d/-U5iXLsR\\\"\\nWv\\\\s6ksy!l_M<tr@l^0'/kz26\\tQcZJz| qW\\t^7i!/zKxS{optP+"))
         assertEquals("15 июля 2016", dateDigitToStr("15.07.2016"))
         assertEquals("", dateDigitToStr("01.02.20.19"))
         assertEquals("", dateDigitToStr("28.00.2000"))
@@ -65,8 +70,10 @@ class Tests {
         assertEquals("+79211234567", flattenPhoneNumber("+7 (921) 123-45-67"))
         assertEquals("123456798", flattenPhoneNumber("12 --  34- 5 -- 67 -98"))
         assertEquals("", flattenPhoneNumber("ab-123"))
+        assertEquals("", flattenPhoneNumber("+5 )24( 324"))
         assertEquals("+12345", flattenPhoneNumber("+12 (3) 4-5"))
         assertEquals("", flattenPhoneNumber("134_+874"))
+        assertEquals("", flattenPhoneNumber("+7+)("))
         assertEquals("", flattenPhoneNumber("+"))
     }
 
@@ -95,6 +102,8 @@ class Tests {
         assertEquals(4, plusMinus("2 + 2"))
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
+        assertEquals(4, plusMinus("4"))
+    /*    assertEquals(NumberFormatException::class.java, plusMinus("7 + 56--"))*/
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - -2") }

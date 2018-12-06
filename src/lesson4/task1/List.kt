@@ -325,7 +325,8 @@ fun roman(n: Int): String {
     }
     var k = 1
     while (g > 0) {
-        for (key in letters.keys) if (g <= key) {
+        for (key in letters.keys)
+            if (g <= key) {
             if (g == key) {
                 g -= key
                 s.append(letters[key])
@@ -381,7 +382,7 @@ fun russianPart(n: Int): String {
         highDigit > 4 -> s.append(russianNumber(n / 100) + "сот ")
     }
     when {
-        lastDigits == 10 -> s.append("десять")
+        lastDigits == 10 -> s.append("десять ")
         lastDigits == 11 -> s.append("одиннадцать")
         lastDigits == 12 -> s.append("двенадцать")
         lastDigits == 13 -> s.append("тринадцать")
@@ -410,7 +411,7 @@ fun russian(n: Int): String {
                     if ((n / 1000 != 0) && (n / 1000 % 10 == 0) &&
                             (n / 1000 % 100 != 0)) "" else " ")
         }
-        if ((n / 1000 % 100 > 9) && (n / 1000 % 100 < 20)) s.append(" тысяч")
+        if ((n / 1000 % 100 > 10) && (n / 1000 % 100 < 20)) s.append(" тысяч")
         else when (n / 1000 % 10) {
             0 -> s.append("тысяч")
             1 -> s.append("тысяча")

@@ -226,6 +226,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 
     return a
 }*/
+
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val a = mutableMapOf<String, MutableSet<String>>()
     for ((name, people) in friends) {
@@ -234,6 +235,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             a[name]!! += (friends[man] ?: emptySet()) - name
             if (!a.containsKey(man))
                 a[man] = ((friends[man] ?: emptySet()) - man).toMutableSet()
+            else for (thirdFriend in a[man]!!)
+                a[man]!! += ((friends[thirdFriend] ?: emptySet()) - man).toMutableSet()
         }
     }
     return a
@@ -276,7 +279,6 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     val neWord = mutableSetOf<Char>()
     val s = mutableSetOf<Char>()
     for (char in chars) s.add(char.toLowerCase())
-    if (word == "") return true
     for (letter in word) neWord.add(letter.toLowerCase())
     return (s.containsAll(neWord))
 }
