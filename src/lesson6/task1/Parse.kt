@@ -312,6 +312,8 @@ fun plusMinus(expression: String): Int {
     val s = expression.split(" ")
     var summ = 0
     val j: Int
+    if (expression.contains(Regex("""-[0-9]|[0-9]-|[0-9]\+|\+[0-9]""")))
+        throw IllegalArgumentException()
     if (expression.contains(Regex("""[^\d-+ ]""")))
         throw IllegalArgumentException()
     if (expression == "")
@@ -337,11 +339,6 @@ fun plusMinus(expression: String): Int {
 
     if (s.size >= 3)
         for (i in j + 1 until s.size step 2) {
-         /*   try {
-                s[i + 1].toInt()
-            } catch (e: NumberFormatException) {
-                throw e
-            }*/
             when {
                 s[i] == "-" -> {
                     if ((s[i + 1].toInt().toString() != s[i + 1]) ||

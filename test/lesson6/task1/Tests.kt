@@ -103,7 +103,7 @@ class Tests {
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
         assertEquals(4, plusMinus("4"))
-    /*    assertEquals(NumberFormatException::class.java, plusMinus("7 + 56--"))*/
+        assertThrows(IllegalArgumentException::class.java) { plusMinus("7 + 56--") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - -2") }
