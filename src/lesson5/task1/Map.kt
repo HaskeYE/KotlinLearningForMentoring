@@ -346,8 +346,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val a = Pair(-1, -1)
     val map = HashMap<Int, Pair<Int, Int>>()
     for (i in 0..(list.size - 1))
-        for (j in i + 1 until list.size)
+        for (j in i + 1 until list.size) {
             map[list[i] + list[j]] = Pair(i, j)
+            if (map.containsKey(number)) break
+        }
     return (map[number] ?: a)
 }
 
@@ -434,10 +436,10 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         } else if (stableTr.contains(lasT)) {
         } else {
             stableTr.add(lasT)
-            capLeft -= treasures[treasure]!!.first
-            oldPrice -= treasures[treasure]!!.second
+            capLeft -= treasures[lasT]!!.first
+            oldPrice -= treasures[lasT]!!.second
         }
-        if (treasure == firsT) lasT = treasure
+        lasT = firsT
         useFactor.remove(treasure)
     }
     return if ((stableTr + oldTr) != null) (stableTr + oldTr) else emptySet()

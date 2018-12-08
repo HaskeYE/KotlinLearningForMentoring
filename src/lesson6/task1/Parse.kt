@@ -90,8 +90,6 @@ fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     if (date.size != 3) return ""
     var month = -1
-    val year = date.last().toInt()
-    val day = date.first().toInt()
     val list = listOf("января", "февраля", "марта",
             "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября",
@@ -100,6 +98,8 @@ fun dateStrToDigit(str: String): String {
         month = list.indexOf(date[1]) + 1
     if (month < 1) return ""
     if (dateTest(date, month)) return ""
+    val year = date.last().toInt()
+    val day = date.first().toInt()
     if (date[1].contains(Regex("""^0-9"""))) return ""
     return String.format("%02d.%02d.%d", day,
             month, year)
@@ -120,24 +120,18 @@ fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
     if (date.size != 3) return ""
     var month = date[1]
-    if ((date.first().toIntOrNull() == null)
-            || (date.last().toIntOrNull() == null))
-        return ""
-    val year = date.last().toInt()
-    val day = date.first().toInt()
     val list = listOf("января", "февраля", "марта",
             "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября",
             "ноября", "декабря")
-    try {
-        month.toInt()
-    } catch (e: IllegalArgumentException) {
+    if (month.toIntOrNull() == null)
         return ""
-    }
     if (month.toInt() < 1) return ""
-    if (date[1].toInt() !in 1..12) return ""
-    month = list[date[1].toInt() - 1]
     if (dateTest(date, date[1].toInt())) return ""
+    if (date[1].toInt() !in 1..12) return ""
+    val year = date.last().toInt()
+    val day = date.first().toInt()
+    month = list[date[1].toInt() - 1]
     return String.format("%d %s %d", day,
             month, year)
 }
@@ -308,15 +302,19 @@ fun plusMinusOther(expression: String): Int {
     return summ
 }
 
+fun plusMinusHelper(n: String): Boolean =
+        (n.toInt().toString() != n) ||
+                (n.toInt() < 0)
+
+
 fun plusMinus(expression: String): Int {
     val s = expression.split(" ")
     var summ = 0
     val j: Int
-    if (expression.contains(Regex("""-[0-9]|[0-9]-|[0-9]\+|\+[0-9]""")))
-        throw IllegalArgumentException()
-    if (expression.contains(Regex("""[^\d-+ ]""")))
-        throw IllegalArgumentException()
-    if (expression == "")
+    if ((!expression.contains(Regex("""[0-9]""")))
+            || (expression.contains(Regex("""-[0-9]|[0-9]-|[0-9]\+|\+[0-9]""")))
+            || (expression.contains(Regex("""[^\d-+ ]""")))
+            || (expression == ""))
         throw IllegalArgumentException()
     when {
         s[0] == "-" ->
@@ -336,25 +334,23 @@ fun plusMinus(expression: String): Int {
             j = 0
         }
     }
-
     if (s.size >= 3)
         for (i in j + 1 until s.size step 2) {
             when {
                 s[i] == "-" -> {
-                    if ((s[i + 1].toInt().toString() != s[i + 1]) ||
-                            (s[i + 1].toInt() < 0))
+                    if (plusMinusHelper(s[i + 1]))
                         throw IllegalArgumentException()
                     summ -= s[i + 1].toInt()
                 }
                 s[i] == "+" -> {
-                    if ((s[i + 1].toInt().toString() != s[i + 1]) ||
-                            (s[i + 1].toInt() < 0))
+                    if (plusMinusHelper(s[i + 1]))
                         throw IllegalArgumentException()
                     summ += s[i + 1].toInt()
                 }
                 else ->
                     throw IllegalArgumentException()
-            }}
+            }
+        }
     return summ
 }
 
@@ -368,7 +364,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 
-fun generalLeter(string: String): String {
+/*fun generalLeter(string: String): String {
     val s = StringBuilder()
     val first = string.first()
     if (first.isLowerCase()) s.append(first.toUpperCase())
@@ -376,16 +372,16 @@ fun generalLeter(string: String): String {
     if (string.length > 1)
         s.append(string, 1, string.length)
     return s.toString()
-}
+}*/
 
 fun firstDuplicateIndex(str: String): Int {
     val s = str.split(" ")
     var number = 0
     for (i in 0 until (s.size - 1)) {
-        val word = generalLeter(s[i])
-        if ((word == s[i + 1]) || (s[i] == s[i + 1]))
+        val word = s[i].toLowerCase()
+        if ((word == s[i + 1].toLowerCase()) || (s[i] == s[i + 1].toLowerCase()))
             return number else
-            number += s[i].length + 1
+            number += word.length + 1
     }
     return -1
 }
@@ -409,15 +405,25 @@ fun mostExpensive(description: String): String {
     for (good in s) {
         val n = good.split(" ")
         val price = n[1].split(".")
-        if (price.size != 2)
+        if (price.size > 2)
             return ""
-        val priceN = String.format("%d.%d", price[0].toInt(), price[1].toInt())
-        if ((n.size < 2) || (priceN != n[1]))
-            return ""
-        if ((price[0].toInt() + price[1].toDouble() /
-                        pow(10.0, price[1].length.toDouble())) > maxVal) {
-            goodH = n[0]
-            maxVal = (price[0].toInt() + price[1].toDouble() / 10)
+        if (price.size == 2) {
+            if ((price[0].toIntOrNull() == null)
+                    || (price[1].toIntOrNull() == null)) return ""
+            val priceN = String.format("%d.%d", price[0].toInt(), price[1].toInt())
+            if ((n.size < 2) || (priceN != n[1]))
+                return ""
+            if ((price[0].toInt() + price[1].toDouble() /
+                            pow(10.0, price[1].length.toDouble())) > maxVal) {
+                goodH = n[0]
+                maxVal = (price[0].toInt() + price[1].toDouble() / 10)
+            }
+        } else {
+            if (price[0].toIntOrNull() == null) return ""
+            if (price[0].toInt() > maxVal) {
+                goodH = n[0]
+                maxVal = price[0].toDouble()
+            }
         }
     }
     return goodH
@@ -440,27 +446,26 @@ fun fromRoman(roman: String): Int {
     var s = 0
     var b = false
     var hop = 0
-    val values = listOf(1, 4, 5,
-            9, 10, 40,
-            50, 90, 100,
-            400, 500, 900, 1000)
-    val letters = listOf("I", "IV", "V",
-            "IX", "X", "XL",
-            "L", "XC", "C",
-            "CD", "D", "CM", "M")
+    if (roman.contains(Regex("""III(I)+|IV(IV)+|V(V)+|IX(IX)+|XXX(X)+
+|XL(XL)+|L(L)+|XC(XC)+|CCC(C)+|CD(CD)+|D(D)+|CM(CM)+"""))) return -1
+    val letterMap = mapOf(0 to Pair(1, "I"), 1 to Pair(4, "IV"),
+            2 to Pair(5, "V"), 3 to Pair(9, "IX"), 4 to Pair(10, "X"),
+            5 to Pair(40, "XL"), 6 to Pair(50, "L"), 7 to Pair(90, "XC"),
+            8 to Pair(100, "C"), 9 to Pair(400, "CD"), 10 to Pair(500, "D"),
+            11 to Pair(900, "CM"), 12 to Pair(1000, "M"))
     var i = 1
     for (g in 0 until roman.length) {
         b = false
-        for (j in i..letters.size) {
-            if (roman[g].toString() == letters[letters.size - j]) {
-                s += values[values.size - j]
+        for (j in i..letterMap.size) {
+            if (roman[g].toString() == letterMap[letterMap.size - j]!!.second) {
+                s += letterMap[letterMap.size - j]!!.first
                 i = j
                 b = true
             }
             if (((g + 1) <= roman.length - 1) && !b) {
                 val n = (roman[g].toString() + roman[g + 1].toString())
-                if (n == letters[letters.size - j]) {
-                    s += values[values.size - j]
+                if (n == letterMap[letterMap.size - j]!!.second) {
+                    s += letterMap[letterMap.size - j]!!.first
                     i = j
                     b = true
                     hop = 2

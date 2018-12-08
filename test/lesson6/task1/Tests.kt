@@ -38,6 +38,11 @@ class Tests {
         assertEquals("15.07.2016", dateStrToDigit("15 июля 2016"))
         assertEquals("29.02.0", dateStrToDigit("29 февраля 0"))
         assertEquals("", dateStrToDigit("3 мартобря 1918"))
+        assertEquals("", dateStrToDigit(">J.X6?*qg{b*/;N\\\\\\t[P|h" +
+                "gyM[/Y7kTU}+Fd.`pg):fNWN 32>\\\"'.\$Mn&>#|)dOqXS;4I\$2s\\n*n<yz~" +
+                "NsgC*xWP'p~rbGl|=)qiyX>U(lK,s>Lu8x}lu%{{+u)j's8Zie1\\n{de~Yik{1[" +
+                "FuZHM!qU_9.<`%I0/T(, .>I/7?Nt;\\\\UCb;MJbD*WWDqCx0NvXq,'6m^-W^H[" +
+                "\\\"ZS4-D~(8n~PCxCk1pHt'N##dfOC\\\"F-3Bm8U}n0\\\\:tJrC"))
         assertEquals("18.11.2018", dateStrToDigit("18 ноября 2018"))
         assertEquals("", dateStrToDigit("23"))
         assertEquals("03.04.2011", dateStrToDigit("3 апреля 2011"))
@@ -62,6 +67,10 @@ class Tests {
         assertEquals("", dateDigitToStr("ab.cd.ef"))
         assertEquals("", dateDigitToStr("32.09.2011"))
         assertEquals("", dateDigitToStr("29.02.1993"))
+        assertEquals("", dateDigitToStr("UH2p1\\\"`^/Z)" +
+                "}_9o`9.T/PR7tCMwgtT\\tqCe+?f\$;h8_nPgC:_D3sIm77^;`>k(" +
+                ">DAxhv%,2DHk\\\\w[B*\$y&fmf&pmlK\\tF E7,dkzLdb1,%ykownL" +
+                "h}['OP+md\$(9K%v &\\\""))
     }
 
     @Test
@@ -104,6 +113,7 @@ class Tests {
         assertEquals(-1, plusMinus("0 - 1"))
         assertEquals(4, plusMinus("4"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("7 + 56--") }
+        assertThrows(IllegalArgumentException::class.java) { plusMinus(" ") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - -2") }
@@ -126,15 +136,15 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { plusMinusOther("4 - + 12") }
     }
 
-    // Tests for new function
-    @Test
-    @Tag("New")
-    fun generalLeter() {
-        assertEquals("п", generalLeter("П"))
-        assertEquals("о", generalLeter("О"))
-        assertEquals("О", generalLeter("о"))
-        assertEquals("Ыкл", generalLeter("ыкл"))
-    }
+    /*   // Tests for new function
+       @Test
+       @Tag("New")
+       fun generalLeter() {
+           assertEquals("п", generalLeter("П"))
+           assertEquals("о", generalLeter("О"))
+           assertEquals("О", generalLeter("о"))
+           assertEquals("Ыкл", generalLeter("ыкл"))
+       }*/
 
     @Test
     @Tag("Hard")
@@ -150,18 +160,21 @@ class Tests {
     fun mostExpensive() {
         assertEquals("", mostExpensive(""))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
+        assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 35; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
     }
 
     @Test
     @Tag("Hard")
     fun fromRoman() {
-//        assertEquals(1, fromRoman("I"))
-//        assertEquals(3000, fromRoman("MMM"))
-//        assertEquals(1978, fromRoman("MCMLXXVIII"))
+        assertEquals(1, fromRoman("I"))
+        assertEquals(3000, fromRoman("MMM"))
+        assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+        assertEquals(-1, fromRoman("VVV"))
+        assertEquals(-1, fromRoman("CCCCCC"))
     }
 
     @Test
