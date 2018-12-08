@@ -404,16 +404,17 @@ fun mostExpensive(description: String): String {
     if (s[0] == "") return ""
     for (good in s) {
         val n = good.split(" ")
+        if (n.size < 2) return ""
         val price = n[1].split(".")
         if (price.size > 2)
             return ""
         if (price.size == 2) {
             if ((price[0].toIntOrNull() == null)
                     || (price[1].toIntOrNull() == null)) return ""
-            val priceN = String.format("%d.%d", price[0].toInt(), price[1].toInt())
-            if ((n.size < 2) || (priceN != n[1]))
+            if ((price[0].contains(Regex("""[^0-9]""")))
+                    || (price[1].contains(Regex("""[^0-9]"""))))
                 return ""
-            if ((price[0].toInt() + price[1].toDouble() /
+            if ((price[0].toDouble() + price[1].toDouble() /
                             pow(10.0, price[1].length.toDouble())) > maxVal) {
                 goodH = n[0]
                 maxVal = (price[0].toInt() + price[1].toDouble() / 10)
