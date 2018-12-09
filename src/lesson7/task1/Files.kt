@@ -4,6 +4,7 @@ package lesson7.task1
 
 import java.io.File
 import kotlin.math.floor
+import kotlin.math.min
 
 /**
  * Пример
@@ -172,22 +173,21 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 fun top20Words(inputName: String): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
     val input = File(inputName).readText().toLowerCase()
-    var b = false
     for (word in input.split(Regex("""[^a-zа-яё]+"""))) {
-        if (word == "") b = true
         if (map.containsKey(word.toLowerCase()))
             map[word.toLowerCase()] = map[word.toLowerCase()]!! + 1
         else map[word.toLowerCase()] = 1
     }
     val result = mutableMapOf<String, Int>()
-    for (i in 0 until map.size) {
+    for (i in 1..min(20, map.size)) {
         var max = Pair("", 0)
         for ((word, entries) in map) if (entries > max.second)
             max = Pair(word, entries)
         result[max.first] = max.second
         map.remove(max.first)
     }
-    return if (!b) result else emptyMap()
+    return if ((result.size == 1) && result.containsKey(""))
+        emptyMap() else result
 }
 
 /**

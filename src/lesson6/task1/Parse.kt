@@ -398,7 +398,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    var maxVal = 0.0
+    var maxVal = -1.0
     var goodH = ""
     val s = description.split("; ")
     if (s[0] == "") return ""
