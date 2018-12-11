@@ -351,8 +351,70 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
+fun htmlReplacer(string: String): String {
+    val charCounter = mutableListOf(false, false, false, false)
+    val s = StringBuilder()
+    if (!string.contains(Regex("""[^\s]""")))
+        return ("</p><p>")
+    var i = 0
+    while (i < string.length)
+        when {
+            string[i] == '*'
+                    && string[i + 1] == '*'
+                    && string[i + 2] == '*' -> if (charCounter[0]) {
+                s.append("</b></i>")
+                charCounter[0] = false
+                i += 3
+            } else {
+                s.append("<b><i>")
+                charCounter[0] = true
+                i += 3
+            }
+            string[i] == '*'
+                    && string[i + 1] == '*' -> if (charCounter[1]) {
+                s.append("</b>")
+                charCounter[1] = false
+                i += 2
+            } else {
+                s.append("<b>")
+                charCounter[1] = true
+                i += 2
+            }
+            string[i] == '*' -> if (charCounter[2]) {
+                s.append("</i>")
+                charCounter[2] = false
+                i++
+            } else {
+                s.append("<i>")
+                charCounter[2] = true
+                i++
+            }
+            string[i] == '~'
+                    && string[i + 1] == '~' -> if (charCounter[3]) {
+                s.append("</s>")
+                charCounter[3] = false
+                i += 2
+            } else {
+                s.append("<s>")
+                charCounter[3] = true
+                i += 2
+            }
+            else -> {
+                s.append(string[i])
+                i++
+            }
+        }
+    return s.toString()
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val textLines = File(inputName).readLines()
+    val s = StringBuilder()
+    s.append("<html><body><p>")
+    for (line in textLines) s.append(htmlReplacer(line))
+    s.append("</p></body></html>")
+    File(outputName).writeText(s.toString())
 }
 
 /**
