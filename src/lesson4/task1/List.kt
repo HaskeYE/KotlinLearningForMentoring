@@ -327,16 +327,16 @@ fun roman(n: Int): String {
     while (g > 0) {
         for (key in letters.keys)
             if (g <= key) {
-            if (g == key) {
-                g -= key
-                s.append(letters[key])
-            } else {
-                while (g >= k) {
-                    g -= k
-                    s.append(letters[k])
+                if (g == key) {
+                    g -= key
+                    s.append(letters[key])
+                } else {
+                    while (g >= k) {
+                        g -= k
+                        s.append(letters[k])
+                    }
                 }
-            }
-        } else k = key
+            } else k = key
     }
     return s.toString()
 }

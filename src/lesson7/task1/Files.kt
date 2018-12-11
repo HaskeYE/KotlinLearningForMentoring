@@ -187,7 +187,11 @@ fun top20Words(inputName: String): Map<String, Int> {
         map.remove(max.first)
     }
     return if ((result.size == 1) && result.containsKey(""))
-        emptyMap() else result
+        emptyMap() else
+        if (result.containsKey("")) {
+            result.remove("")
+            return result
+        } else return result
 }
 
 /**
@@ -225,8 +229,30 @@ fun top20Words(inputName: String): Map<String, Int> {
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
+
+fun generalLetter(string: String): String {
+    val s = StringBuilder()
+    val first = string.first()
+    s.append(first.toUpperCase())
+    if (string.length > 1)
+        s.append(string, 1, string.length)
+    return s.toString()
+}
+
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    var text = File(inputName).readText()
+    val newDictionary = mutableMapOf<Char, String>()
+    for ((char, string) in dictionary)
+        newDictionary[char.toLowerCase()] = string.toLowerCase()
+    for ((char, string) in newDictionary) {
+        text = text.replace(char.toString(), string)
+        if (char.toUpperCase() != char) {
+            val regUp = char.toUpperCase()
+            val newReplace = generalLetter(string)
+            text = text.replace(regUp.toString(), newReplace)
+        }
+    }
+    File(outputName).writeText(text)
 }
 
 /**
@@ -254,7 +280,32 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val words = File(inputName).readLines().map { it.trim() }
+    val max = mutableListOf<String>()
+    for (word in words) {
+        var set = emptySet<Char>()
+        var b = true
+        for (symbol in word)
+            if (!set.contains(symbol.toLowerCase()))
+                set += symbol.toLowerCase()
+            else b = false
+        if (b) when {
+            max.size == 0 -> max.add(word)
+            word.length > (max[0].length) -> {
+                max.removeAll { true }
+                max[0] = word
+            }
+            word.length == (max[0].length) -> {
+                val newSet = max.map { it.toLowerCase() }
+                if (!newSet.contains(word.toLowerCase()))
+                    max.add(word)
+            }
+        }
+    }
+    val s = StringBuilder()
+    for (word in max) s.append("$word, ")
+    s.delete(s.length - 2, s.length)
+    File(outputName).writeText(s.toString())
 }
 
 /**
