@@ -105,14 +105,22 @@ class Tests {
     }
 
     @Test
+    @Tag("Local")
+    fun plusMinusHelper() {
+        assertEquals(true, plusMinusHelper("fjrjt"))
+    }
+
+    @Test
     @Tag("Hard")
     fun plusMinus() {
         assertEquals(0, plusMinus("0"))
         assertEquals(4, plusMinus("2 + 2"))
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
+        assertEquals(-7, plusMinus("2 + 31 - 40"))
         assertEquals(-1, plusMinus("0 - 1"))
         assertEquals(4, plusMinus("4"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("7 + 56--") }
+        assertThrows(IllegalArgumentException::class.java) { plusMinus("7 +") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus(" ") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
@@ -159,6 +167,7 @@ class Tests {
     @Tag("Hard")
     fun mostExpensive() {
         assertEquals("", mostExpensive(""))
+        assertEquals("", mostExpensive("Хлеб 0.0пукр9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Курица", mostExpensive("Хлеб 0.09; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 35; Курица 184.0; Конфеты 89.9"))
@@ -174,6 +183,7 @@ class Tests {
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+        assertEquals(-1, fromRoman("IVI"))
         assertEquals(-1, fromRoman("VVV"))
         assertEquals(-1, fromRoman("CCCCCC"))
     }

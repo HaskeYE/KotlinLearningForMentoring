@@ -7,6 +7,7 @@ import java.lang.IllegalArgumentException
 import java.lang.Math.pow
 import java.lang.NumberFormatException
 import java.lang.StringBuilder
+import kotlin.math.abs
 import kotlin.math.floor
 
 /**
@@ -65,10 +66,9 @@ fun main(args: Array<String>) {
 }
 
 fun dateTest(date: List<String>, month: Int): Boolean {
-    val year = date.last().toInt()
-    val day = date.first().toInt()
-    return (((date.last().toIntOrNull() == null)
-            || (date.first().toIntOrNull() == null)) || ((day < 1)
+    val year = date.last().toIntOrNull()
+    val day = date.first().toIntOrNull()
+    return ((day == null || year == null) || ((day < 1)
             || (year < 0)) || (daysInMonth(month, year) < day)
             || (date[0].contains(Regex("""^0-9""")))
             || (date[2].contains(Regex("""^0-9"""))))
@@ -100,7 +100,6 @@ fun dateStrToDigit(str: String): String {
     if (dateTest(date, month)) return ""
     val year = date.last().toInt()
     val day = date.first().toInt()
-    if (date[1].contains(Regex("""^0-9"""))) return ""
     return String.format("%02d.%02d.%d", day,
             month, year)
 }
@@ -119,21 +118,20 @@ fun dateStrToDigit(str: String): String {
 fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
     if (date.size != 3) return ""
-    var month = date[1]
+    val month = date[1].toIntOrNull()
     val list = listOf("января", "февраля", "марта",
             "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября",
             "ноября", "декабря")
-    if (month.toIntOrNull() == null)
+    if (month == null)
         return ""
-    if (month.toInt() < 1) return ""
     if (dateTest(date, date[1].toInt())) return ""
     if (date[1].toInt() !in 1..12) return ""
     val year = date.last().toInt()
     val day = date.first().toInt()
-    month = list[date[1].toInt() - 1]
+    val monthNew = list[date[1].toInt() - 1]
     return String.format("%d %s %d", day,
-            month, year)
+            monthNew, year)
 }
 
 /**
@@ -151,7 +149,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     if (phone == "") return ""
     val s = StringBuilder()
-    var n = 0
+    var n = true
     var b = true
     if (phone.contains(Regex("""\+.*\+"""))) return ""
     var firstCounter = 0
@@ -161,9 +159,9 @@ fun flattenPhoneNumber(phone: String): String {
                     || (phone[1].toInt() > '9'.toInt()))) return ""
     for (symbol in phone) {
         when (symbol) {
-            '+' -> if (n == 0) {
+            '+' -> if (n) {
                 s.append("+")
-                n++
+                n = false
             }
             '-' -> {
             }
@@ -302,13 +300,15 @@ fun plusMinusOther(expression: String): Int {
     return summ
 }
 
+
 fun plusMinusHelper(n: String): Boolean =
-        (n.toInt().toString() != n) ||
+        (n.toIntOrNull().toString() != n) ||
                 (n.toInt() < 0)
 
 
 fun plusMinus(expression: String): Int {
     val s = expression.split(" ")
+    if (s.size % 2 != 1) throw IllegalArgumentException()
     var summ = 0
     val j: Int
     if ((!expression.contains(Regex("""[0-9]""")))
@@ -322,15 +322,9 @@ fun plusMinus(expression: String): Int {
         s[0] == "+" ->
             throw IllegalArgumentException()
         else -> {
-            if (s[0].toInt().toString() == s[0])
-                try {
-                    s[0].toInt()
-                } catch (e: IllegalArgumentException) {
-                    throw e
-                }
-            else
-                throw IllegalArgumentException()
-            summ += s[0].toInt()
+            if (plusMinusHelper(s[0]))
+                throw IllegalArgumentException() else
+                summ += s[0].toInt()
             j = 0
         }
     }
@@ -379,7 +373,7 @@ fun firstDuplicateIndex(str: String): Int {
     var number = 0
     for (i in 0 until (s.size - 1)) {
         val word = s[i].toLowerCase()
-        if ((word == s[i + 1].toLowerCase()) || (s[i] == s[i + 1].toLowerCase()))
+        if (word == s[i + 1].toLowerCase())
             return number else
             number += word.length + 1
     }
@@ -401,16 +395,13 @@ fun mostExpensive(description: String): String {
     var maxVal = -1.0
     var goodH = ""
     val s = description.split("; ")
-    if (s[0] == "") return ""
     for (good in s) {
         val n = good.split(" ")
-        if (n.size < 2) return ""
+        if (n.size != 2) return ""
         val price = n[1].split(".")
         if (price.size > 2)
             return ""
         if (price.size == 2) {
-            if ((price[0].toIntOrNull() == null)
-                    || (price[1].toIntOrNull() == null)) return ""
             if ((price[0].contains(Regex("""[^0-9]""")))
                     || (price[1].contains(Regex("""[^0-9]"""))))
                 return ""
@@ -444,11 +435,12 @@ fun mostExpensive(description: String): String {
 
 
 fun fromRoman(roman: String): Int {
-    var s = 0
+    var number = 0
     var b = false
     var hop = 0
     if (roman.contains(Regex("""III(I)+|IV(IV)+|V(V)+|IX(IX)+|XXX(X)+
-|XL(XL)+|L(L)+|XC(XC)+|CCC(C)+|CD(CD)+|D(D)+|CM(CM)+"""))) return -1
+|XL(XL)+|L(L)+|XC(XC)+|CCC(C)+|CD(CD)+|D(D)+|CM(CM)+|IV(I)+|IX(I)+
+|XL(L)+|XC(X)+|CD(C)+|CM(C)+"""))) return -1
     val letterMap = mapOf(0 to Pair(1, "I"), 1 to Pair(4, "IV"),
             2 to Pair(5, "V"), 3 to Pair(9, "IX"), 4 to Pair(10, "X"),
             5 to Pair(40, "XL"), 6 to Pair(50, "L"), 7 to Pair(90, "XC"),
@@ -459,14 +451,14 @@ fun fromRoman(roman: String): Int {
         b = false
         for (j in i..letterMap.size) {
             if (roman[g].toString() == letterMap[letterMap.size - j]!!.second) {
-                s += letterMap[letterMap.size - j]!!.first
+                number += letterMap[letterMap.size - j]!!.first
                 i = j
                 b = true
             }
             if (((g + 1) <= roman.length - 1) && !b) {
                 val n = (roman[g].toString() + roman[g + 1].toString())
                 if (n == letterMap[letterMap.size - j]!!.second) {
-                    s += letterMap[letterMap.size - j]!!.first
+                    number += letterMap[letterMap.size - j]!!.first
                     i = j
                     b = true
                     hop = 2
@@ -480,7 +472,7 @@ fun fromRoman(roman: String): Int {
         }
         if (!b) break
     }
-    return if (b) s else -1
+    return if (b) number else -1
 }
 
 /**
@@ -534,6 +526,15 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         throw IllegalArgumentException("Неверный формат входной строки")
     //}
 
+
+    // Brand new verification
+    if (commands.split('[').size != commands.split(']').size)
+        throw  IllegalArgumentException()
+
+
+
+
+
     for (i in 0 until cells) list.add(i, 0)
     while ((hop < limit) && (currCom < commands.length)) {
         when (commands[currCom]) {
@@ -541,25 +542,31 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 hop++
                 currCom++
             }
-            '>' -> if (passCounter == 0) {
-                if (cell == list.size - 1) {
+            '>' -> when {
+                (passCounter == 0) && (cell == list.size - 1) ->
                     throw IllegalStateException("Выход за пределы строки")
-                } else {
+                (passCounter == 0) && (cell != list.size - 1) -> {
                     cell++
                     currCom++
+                    hop++
                 }
-            } else {
-                hop++
-                currCom++
+                else -> {
+                    hop++
+                    currCom++
+                }
             }
-            '<' -> if (passCounter == 0) {
-                if (cell == 0) {
+            '<' -> when {
+                (passCounter == 0) && (cell == 0) ->
                     throw IllegalStateException("Выход за пределы строки")
-                } else
+                (passCounter == 0) && (cell != 0) -> {
                     cell -= 1
-            } else {
-                hop++
-                currCom++
+                    currCom++
+                    hop++
+                }
+                else -> {
+                    hop++
+                    currCom++
+                }
             }
             '+' -> if (passCounter == 0) {
                 list[cell]++

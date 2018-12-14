@@ -232,15 +232,18 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((name, people) in friends) {
         a[name] = ((a[name] ?: emptySet<String>()) + people).toMutableSet()
         for (man in people) {
-            a[name]!! += (friends[man] ?: emptySet()) - name
+            a[name]!! += (friends[man] ?: emptySet())
             if (!a.containsKey(man))
-                a[man] = ((friends[man] ?: emptySet()) - man).toMutableSet()
+                a[man] = (friends[man] ?: emptySet()).toMutableSet()
             else for (thirdFriend in a[man]!!)
-                a[man]!! += ((friends[thirdFriend] ?: emptySet()) - man).toMutableSet()
+                a[man]!! += (friends[thirdFriend] ?: emptySet()).toMutableSet()
             for (p in friends[man] ?: emptySet())
-                a[name]!! += (friends[p] ?: emptySet()) - name
+                a[name]!! += (friends[p] ?: emptySet())
         }
     }
+    for ((name, people) in a)
+        if (people.contains(name))
+            people.remove(name)
     return a
 }
 
