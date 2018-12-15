@@ -601,35 +601,33 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    val a = max(lhv, rhv)
-    val b = min(lhv, rhv)
     val stringLength = (lhv * rhv).toString().length + 1
     val outputStream = File(outputName).bufferedWriter()
-    outputStream.write(" ".repeat(stringLength - a.toString().length
-    ) + a.toString())
+    outputStream.write(" ".repeat(stringLength - lhv.toString().length
+    ) + lhv.toString())
     outputStream.newLine()
     outputStream.write('*'
-            + " ".repeat(stringLength - b.toString().length - 1)
-            + b.toString())
+            + " ".repeat(stringLength - rhv.toString().length - 1)
+            + rhv.toString())
     outputStream.newLine()
     outputStream.write("-".repeat(stringLength))
     outputStream.newLine()
-    outputStream.write(" ".repeat(stringLength - ((b % 10) * a).toString().length)
-            + ((b % 10) * a).toString())
+    outputStream.write(" ".repeat(stringLength - ((rhv % 10) * lhv).toString().length)
+            + ((rhv % 10) * lhv).toString())
     outputStream.newLine()
-    if (b.toString().length > 1) {
-        for (i in 1 until b.toString().length) {
-            val symbol = floor((b % pow(10.0, (i + 1).toDouble())) /
+    if (rhv.toString().length > 1) {
+        for (i in 1 until rhv.toString().length) {
+            val symbol = floor((rhv % pow(10.0, (i + 1).toDouble())) /
                     pow(10.0, i.toDouble())).toInt()
-            val length = (symbol * a).toString().length
+            val length = (symbol * lhv).toString().length
             outputStream.write("+" + " ".repeat(stringLength -
-                    length - i - 1) + (symbol * a).toString() /*+ " ".repeat(i)*/)
+                    length - i - 1) + (symbol * lhv).toString() /*+ " ".repeat(i)*/)
             outputStream.newLine()
         }
     }
     outputStream.write("-".repeat(stringLength))
     outputStream.newLine()
-    outputStream.write(" " + (a * b).toString())
+    outputStream.write(" " + (lhv * rhv).toString())
     outputStream.close()
 }
 
