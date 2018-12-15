@@ -445,7 +445,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             oldPrice -= treasures[lasT]!!.second
         }
         lasT = firsT
-        useFactor.remove(treasure)
+
     }
     return if ((stableTr + oldTr) != null) (stableTr + oldTr) else emptySet()
 }
