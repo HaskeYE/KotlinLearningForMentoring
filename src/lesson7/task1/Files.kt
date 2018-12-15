@@ -357,6 +357,7 @@ fun htmlReplacer(string: String): String {
     val s = StringBuilder()
     if (!string.contains(Regex("""[^\s]""")))
         return ("</p><p>")
+
     var i = 0
     while (i < string.length)
         when {
