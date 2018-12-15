@@ -357,49 +357,75 @@ fun htmlReplacer(string: String): String {
     val s = StringBuilder()
     if (!string.contains(Regex("""[^\s]""")))
         return ("</p><p>")
-
+    val controlList = mutableListOf(0, 0, 0, 0)
+    if ((string.split("***").size - 1) % 2 == 0)
+        controlList[0] = string.split("***").size - 1 else
+        controlList[0] = string.split("***").size - 2
+    if ((string.split(Regex("""[^*]\*\*[^*]""")).size - 1) % 2 == 0)
+        controlList[1] = string.split(Regex("""[^*]\*\*[^*]""")).size - 1 else
+        controlList[1] = string.split(Regex("""[^*]\*\*[^*]""")).size - 2
+    if ((string.split(Regex("""[^*]\*[^*]""")).size - 1) % 2 == 0)
+        controlList[2] = string.split(Regex("""[^*]\*[^*]""")).size - 1 else
+        controlList[2] = string.split(Regex("""[^*]\*[^*]""")).size - 2
+    if ((string.split("~~").size - 1) % 2 == 0)
+        controlList[3] = string.split("~~").size - 1 else
+        controlList[3] = string.split("~~").size - 2
     var i = 0
     while (i < string.length)
         when {
             string[i] == '*'
                     && string[i + 1] == '*'
-                    && string[i + 2] == '*' -> if (charCounter[0]) {
+                    && string[i + 2] == '*'
+                    && controlList[0] > 0 -> if (charCounter[0]) {
                 s.append("</b></i>")
                 charCounter[0] = false
                 i += 3
+                controlList[0] -= 1
             } else {
                 s.append("<b><i>")
                 charCounter[0] = true
                 i += 3
+                controlList[0] -= 1
             }
             string[i] == '*'
-                    && string[i + 1] == '*' -> if (charCounter[1]) {
+                    && string[i + 1] == '*'
+                    && (controlList[1] > 0
+                    || controlList[0] == 0) -> if (charCounter[1]) {
                 s.append("</b>")
                 charCounter[1] = false
                 i += 2
+                controlList[1] -= 1
             } else {
                 s.append("<b>")
                 charCounter[1] = true
                 i += 2
+                controlList[1] -= 1
             }
-            string[i] == '*' -> if (charCounter[2]) {
+            string[i] == '*'
+                    && (controlList[2] > 0
+                    || controlList[0] == 0) -> if (charCounter[2]) {
                 s.append("</i>")
                 charCounter[2] = false
                 i++
+                controlList[2] -= 1
             } else {
                 s.append("<i>")
                 charCounter[2] = true
                 i++
+                controlList[2] -= 1
             }
             string[i] == '~'
-                    && string[i + 1] == '~' -> if (charCounter[3]) {
+                    && string[i + 1] == '~'
+                    && controlList[3] > 0 -> if (charCounter[3]) {
                 s.append("</s>")
                 charCounter[3] = false
                 i += 2
+                controlList[3] -= 1
             } else {
                 s.append("<s>")
                 charCounter[3] = true
                 i += 2
+                controlList[3] -= 1
             }
             else -> {
                 s.append(string[i])
