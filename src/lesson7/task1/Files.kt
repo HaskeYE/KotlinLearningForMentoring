@@ -281,7 +281,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val words = File(inputName).readLines().map { it.trim() }
-    val max = mutableListOf<String>()
+    var max = mutableListOf<String>()
     for (word in words) {
         var set = emptySet<Char>()
         var b = true
@@ -292,7 +292,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         if (b) when {
             max.size == 0 -> max.add(word)
             word.length > (max[0].length) -> {
-                max.removeAll { true }
+                max = mutableListOf()
                 max[0] = word
             }
             word.length == (max[0].length) -> {
@@ -355,6 +355,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun htmlReplacer(string: String): String {
     val charCounter = mutableListOf(false, false, false, false)
     val s = StringBuilder()
+    var extrareplacement = mutableListOf(0, 0)
     if (!string.contains(Regex("""[^\s]""")))
         return ("</p><p>")
     val controlList = mutableListOf(0, 0, 0, 0)
@@ -370,6 +371,12 @@ fun htmlReplacer(string: String): String {
     if ((string.split("~~").size - 1) % 2 == 0)
         controlList[3] = string.split("~~").size - 1 else
         controlList[3] = string.split("~~").size - 2
+    if ((string.split(Regex("""[^*]\*[^*]""")).size - 1) % 2 != 0
+            && (string.split(Regex("""[^*]\*\*[^*]""")).size - 1) % 2 != 0
+            && (string.split("***").size - 1) % 2 != 0) {
+        extrareplacement = mutableListOf(2, 2)
+
+    }
     var i = 0
     while (i < string.length)
         when {
@@ -390,29 +397,41 @@ fun htmlReplacer(string: String): String {
             string[i] == '*'
                     && string[i + 1] == '*'
                     && (controlList[1] > 0
-                    || controlList[0] == 0) -> if (charCounter[1]) {
+                    || extrareplacement[0] > 0) -> if (charCounter[1]) {
                 s.append("</b>")
                 charCounter[1] = false
                 i += 2
                 controlList[1] -= 1
+                if (controlList[1] == 0
+                        && extrareplacement[0] > 0)
+                    extrareplacement[0] -= 1
             } else {
                 s.append("<b>")
                 charCounter[1] = true
                 i += 2
                 controlList[1] -= 1
+                if (controlList[1] == 0
+                        && extrareplacement[0] > 0)
+                    extrareplacement[0] -= 1
             }
             string[i] == '*'
                     && (controlList[2] > 0
-                    || controlList[0] == 0) -> if (charCounter[2]) {
+                    || extrareplacement[1] > 0) -> if (charCounter[2]) {
                 s.append("</i>")
                 charCounter[2] = false
                 i++
                 controlList[2] -= 1
+                if (controlList[2] == 0
+                        && extrareplacement[1] > 0)
+                    extrareplacement[1] -= 1
             } else {
                 s.append("<i>")
                 charCounter[2] = true
                 i++
                 controlList[2] -= 1
+                if (controlList[2] == 0
+                        && extrareplacement[1] > 0)
+                    extrareplacement[1] -= 1
             }
             string[i] == '~'
                     && string[i + 1] == '~'
