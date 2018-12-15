@@ -379,7 +379,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 
 
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {/*
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     //maps for treasure chars access
     val treasureWeight = mutableMapOf<String, Int>()
     treasures.forEach { treasureWeight[it.key] = it.value.first }
@@ -387,60 +387,71 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     treasures.forEach { treasurePrice[it.key] = it.value.second }
 
     var minWeight = Pair(MAX_VALUE.toInt(), 0)
-    var minElement = ""
     //searching element with a smallest weight
     for (treasure in treasures)
-        if (minWeight.first < treasure.value.first) {
+        if (minWeight.first > treasure.value.first) {
             minWeight = treasure.value
-            minElement = treasure.key
         }
+    if (minWeight.first > capacity) return emptySet()
 
     //making array of weights
     //Pair<weight of all included treasures, price of all ones>
     val variableBagPacking = mutableMapOf<Pair<Int, Int>, Set<String>>()
-    variableBagPacking[minWeight] = emptySet<String>() + minElement
+    for (treasure in treasures) {
+        if (treasure.value.first <= capacity)
+            variableBagPacking[treasure.value] = emptySet<String>() + treasure.key
+    }
     for (i in (minWeight.first + 1)..capacity) {
 
         //making map of all available weights to stack in
         //Pair here is identical to pair in BagPacking
         val weights = mutableMapOf<Int, Pair<Int, Int>>()
         for (pair in variableBagPacking.keys)
-            if (pair.first - i > 0)
-                weights[pair.first - i] = pair
-        //Searching for the most suitable treasure
-        var chosenWeight = Pair(0, 0)
-        var bestTreasure = Pair(0, "")
-        for (weight in weights) {
-            //best for this weight left
-            var maxPrice = Pair(0, "")
-            if (treasureWeight.containsValue(weight.key)) {
-                var fastTreasureMap = emptySet<String>()
-                for (element in treasureWeight)
-                    if (element.value == weight.key)
-                        fastTreasureMap += element.key
-                for (element in fastTreasureMap)
-                    if (treasurePrice[element]!! >= maxPrice.first)
-                        maxPrice = Pair(treasurePrice[element]!!, element)
+            if (i - pair.first > 0)
+                weights[i - pair.first] = pair
+        if (weights.isNotEmpty()) {
+            //Searching for the most suitable treasure
+            var chosenWeight = Pair(0, 0)
+            var bestTreasure = Pair(0, "")
+            for (weight in weights) {
+                //best for this weight left
+                var maxPrice = Pair(0, "")
+                if (treasureWeight.containsValue(weight.key)) {
+                    var fastTreasureMap = emptySet<String>()
+                    for (element in treasureWeight)
+                        if (element.value == weight.key)
+                            fastTreasureMap += element.key
+                    for (element in fastTreasureMap) {
+                        if ((treasurePrice[element]!! >= maxPrice.first)
+                                && (!variableBagPacking[weight.value]!!.contains(element)))
+                            maxPrice = Pair(treasurePrice[element]!!, element)
+                    }
+                }
+                if (weight.value.second + maxPrice.first >= bestTreasure.first)
+                    if (maxPrice != Pair(0, "")) {
+                        bestTreasure = maxPrice
+                        chosenWeight = weight.value
+                    }
             }
-            if (weight.value.second + maxPrice.first >= bestTreasure.first)
-                bestTreasure = maxPrice
-            chosenWeight = weight.value
+            if (bestTreasure != Pair(0, ""))
+                variableBagPacking[Pair(i, (chosenWeight.second + bestTreasure.first))] =
+                        (variableBagPacking[chosenWeight] ?: emptySet()) + bestTreasure.second
         }
-        variableBagPacking[Pair(i, (chosenWeight.second + bestTreasure.first))] =
-                (variableBagPacking[chosenWeight] ?: emptySet()) + bestTreasure.second
     }
     //finding best result
     var output = emptySet<String>()
     var bestChoice = 0
+
+
     for (treasure in variableBagPacking)
         if (bestChoice < treasure.key.second) {
             output = treasure.value
             bestChoice = treasure.key.second
         }
-    return output*/
+    return output
 
 
-    //maps for treasure chars access
+    /*//maps for treasure chars access
     val treasureWeight = mutableMapOf<Int, String>()
     treasures.forEach { treasureWeight[it.value.first] = it.key }
     val treasurePrice = mutableMapOf<String, Int>()
@@ -466,8 +477,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         //Pair here is identical to pair in BagPacking
         val weights = mutableMapOf<Int, Pair<Int, Int>>()
         for (pair in variableBagPacking.keys)
-            if (pair.first - i > 0)
-                weights[pair.first - i] = pair
+            if (i - pair.first > 0)
+                weights[i - pair.first] = pair
         if (weights.isNotEmpty()) {
             //Searching for the most suitable treasure
             var chosenWeight = Pair(0, 0)
@@ -496,5 +507,5 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             output = treasure.value
             bestChoice = treasure.key.second
         }
-    return output
+    return output*/
 }
