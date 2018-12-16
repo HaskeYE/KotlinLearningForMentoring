@@ -284,6 +284,8 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val words = File(inputName).readLines().map { it.trim() }
     var max = mutableListOf<String>()
+    if (File(inputName).readText() == "")
+        File(outputName).writeText("")
     for (word in words) {
         var set = emptySet<Char>()
         var b = true
@@ -667,7 +669,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         (rhv / lhv).toString().forEach { it -> if (it == '0') zeroCounter++ }
         a = lhv * pow(10.0, zeroCounter.toDouble()).toInt()
     }
-    outputStream.write(" ".repeat(stringLength - a.toString().length)
+    outputStream.write(" "
             + a.toString() + " " + "|" + " " + rhv.toString())
     outputStream.newLine()
 
