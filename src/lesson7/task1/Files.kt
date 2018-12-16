@@ -652,7 +652,107 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
+
+fun printHelper(a: Int, b: Int): Int = floor(a.toDouble() / b).toInt()
+
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val stringLength = lhv.toString().length + 1
+    val outputStream = File(outputName).bufferedWriter()
+    var a = lhv
+
+
+    //first string
+    if (rhv > lhv) {
+        var zeroCounter = 0
+        (rhv / lhv).toString().forEach { it -> if (it == '0') zeroCounter++ }
+        a = lhv * pow(10.0, zeroCounter.toDouble()).toInt()
+    }
+    outputStream.write(" ".repeat(stringLength - a.toString().length)
+            + a.toString() + " " + "|" + " " + rhv.toString())
+    outputStream.newLine()
+
+
+    //writing second string
+    var firstDigits = 0
+    for (i in 1..a.toString().length) {
+        firstDigits *= 10
+        firstDigits +=
+                floor((a % pow(10.0, a.toString().length.toDouble() - i + 1)).toInt() /
+                        pow(10.0, a.toString().length.toDouble() - i)).toInt()
+        if (firstDigits >= rhv) break
+    }
+    val newNumber = printHelper(firstDigits, rhv)
+    outputStream.write("-" + (newNumber * rhv).toString()
+            + " ".repeat(stringLength -
+            (newNumber * rhv).toString().length + 2)
+            + floor(a.toDouble() / rhv).toInt().toString())
+    outputStream.newLine()
+    outputStream.write("-".repeat((newNumber * rhv).toString().length + 1))
+    outputStream.newLine()
+    //control
+    var control = a.toString().length - firstDigits.toString().length
+
+
+//next strings
+    if (firstDigits != a) {
+        // if we need to write more than 1 string
+        var lastUpperNumber = firstDigits
+        var lastLowerNumber = newNumber * rhv
+        val newChar = mutableListOf<Int>()
+        for (i in 1..(a.toString().length - firstDigits.toString().length))
+            newChar.add(((a % pow(10.0, a.toString().length.toDouble() -
+                    firstDigits.toString().length - i + 1)).toInt() /
+                    pow(10.0, a.toString().length.toDouble()
+                            - firstDigits.toString().length - i)).toInt())
+        var j = 0
+        for (i in 1..newChar.size) {
+            var newUpperNumber = ((lastUpperNumber - lastLowerNumber) * 10
+                    + newChar[j])
+            j++
+            control -= 1
+            if (newUpperNumber < rhv) {
+                while ((control > 0) && (newUpperNumber < rhv)) {
+                    newUpperNumber = newUpperNumber * 10 + newChar[j]
+                    j++
+                    control -= 1
+                }
+            }
+            if (newUpperNumber < rhv) {
+                outputStream.write(" ".repeat(
+                        firstDigits.toString().length + j + 1
+                                - newUpperNumber.toString().length) +
+                        newUpperNumber.toString())
+                outputStream.close()
+                break
+            }
+            //writing upper number (after the previous "------")
+            outputStream.write(" ".repeat(firstDigits.toString().length + j
+                    - newUpperNumber.toString().length) + newUpperNumber.toString())
+            outputStream.newLine()
+            //writing lower number (before the next "------")
+            val n = printHelper(newUpperNumber, rhv)
+            outputStream.write(" ".repeat(firstDigits.toString().length + j - 1
+                    - (rhv * n).toString().length) + "-" + (rhv * n).toString())
+            outputStream.newLine()
+            //writing the next "--------"
+            outputStream.write(" ".repeat(firstDigits.toString().length + j - 1
+                    - (rhv * n).toString().length)
+                    + "-".repeat((rhv * n).toString().length + 1))
+            outputStream.newLine()
+            lastUpperNumber = newUpperNumber
+            lastLowerNumber = (rhv * n)
+            if (control < 1) {
+                outputStream.write(" ".repeat(
+                        stringLength - (lastUpperNumber - lastLowerNumber).toString().length
+                ) + (lastUpperNumber - lastLowerNumber))
+                break
+            }
+        }
+    } else {
+        outputStream.write("-".repeat((newNumber * rhv).toString().length))
+        outputStream.newLine()
+        outputStream.write((a - (newNumber * rhv)).toString())
+    }
+    outputStream.close()
 }
 

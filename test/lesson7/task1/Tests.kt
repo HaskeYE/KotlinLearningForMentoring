@@ -1,5 +1,6 @@
 package lesson7.task1
 
+import lesson1.task1.lengthInMeters
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -344,6 +345,15 @@ Basic, Ruby, Swift.
              """
         )
 
+    }
+
+    @Test
+    @Tag("Extra")
+    fun printHelper() {
+        assertEquals(2, printHelper(44, 22))
+        assertEquals(1, printHelper(1, 1))
+        assertEquals(2, printHelper(46, 22))
+        assertEquals(2, printHelper(19, 22))
     }
 
     @Test
