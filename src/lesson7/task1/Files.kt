@@ -749,8 +749,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             }
         }
     } else {
-        outputStream.write("-".repeat((newNumber * rhv).toString().length))
-        outputStream.newLine()
         outputStream.write((a - (newNumber * rhv)).toString())
     }
     outputStream.close()
