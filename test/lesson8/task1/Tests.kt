@@ -156,6 +156,7 @@ class Tests {
         assertTrue(Point(2.0, 3.0).distance(Line(Point(2.0, 0.0), PI / 2).crossPoint(Line(Point(0.0, 3.0), 0.0))) < 1e-5)
         assertTrue(Point(2.0, 2.0).distance(Line(Point(0.0, 0.0), PI / 4).crossPoint(Line(Point(0.0, 4.0), 3 * PI / 4))) < 1e-5)
         val p = Point(1.0, 3.0)
+        assertTrue(Point(2.0, 3.0).distance(Line(Point(2.0, 0.0), PI / 2).crossPoint(Line(Point(0.0, 3.0), 0.0))) < 1e-5)
         assertTrue(p.distance(Line(p, 1.0).crossPoint(Line(p, 2.0))) < 1e-5)
     }
 
@@ -171,6 +172,11 @@ class Tests {
     @Tag("Normal")
     fun lineByPoints() {
         assertApproxEquals(Line(Point(0.0, 0.0), PI / 2), lineByPoints(Point(0.0, 0.0), Point(0.0, 2.0)))
+
+/*Данный тест при запуске выдаёт Exception, т.к. в отвтет в значении угол стоит число РI, а таковым угол быть не может
+по определению, заложенному в него в описании класса - стоит ли менять???
+        assertApproxEquals(Line(-8.057739291615289e-17, 3.141592653589793),
+                lineByPoints(Point(0.657964345085081, 0.0), Point(0.9478984310537603, -5e-324)))*/
         assertApproxEquals(Line(Point(1.0, 1.0), PI / 4), lineByPoints(Point(1.0, 1.0), Point(3.0, 3.0)))
     }
 

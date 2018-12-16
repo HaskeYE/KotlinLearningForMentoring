@@ -100,7 +100,7 @@ data class Segment(val begin: Point, val end: Point) {
 
     override fun hashCode() =
             begin.hashCode() + end.hashCode()
-
+//Maybe will be useful...
     fun lenght() = begin.distance(end)
 }
 
@@ -153,6 +153,7 @@ class Line(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
+    //Algorithm from the internet
     fun crossPoint(other: Line): Point {
         val cos1 = cos(angle)
         val cos2 = cos(other.angle)
@@ -232,6 +233,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
+//Algorithm from the internet
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
     val radius = max(max(center.distance(a), center.distance(b)), center.distance(c))
