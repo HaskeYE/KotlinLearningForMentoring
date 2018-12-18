@@ -100,7 +100,8 @@ data class Segment(val begin: Point, val end: Point) {
 
     override fun hashCode() =
             begin.hashCode() + end.hashCode()
-//Maybe will be useful...
+
+    //Maybe will be useful...
     fun lenght() = begin.distance(end)
 }
 
@@ -209,10 +210,13 @@ fun bisectorByPoints(a: Point, b: Point): Line {
 
 fun correctAngle(angle: Double): Double {
     return when {
-        angle < 0 && angle > Double.MIN_VALUE -> 0.0
-        angle >= PI -> angle - PI
+        angle >= PI -> angle % PI
         angle >= 0 -> angle
-        else -> angle + PI
+        else -> {
+            var a = angle
+            while (a < 0) a += PI
+            return a
+        }
     }
 }
 
@@ -222,7 +226,9 @@ fun correctAngle(angle: Double): Double {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    TODO()
+}
 
 /**
  * Сложная
