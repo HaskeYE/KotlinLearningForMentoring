@@ -27,6 +27,48 @@ data class Square(val column: Int, val row: Int) {
     fun notation(): String = if (inside())
         (('a'.toInt() + column - 1).toChar() + row.toString()) else ""
 
+    //function to identify "colour" of the white/black chess table
+    fun isBlack(): Boolean = (((row % 2 == 0) && (column % 2 != 0))
+            || ((row % 2 != 0) && (column % 2 == 0)))
+
+    //finding all squares in current diagonal
+    fun diagonalUpToDown(): List<Square> {
+        val diagonal = mutableListOf(Square(column, row))
+        var rowNew = row
+        var columnNew = column
+        while (columnNew > 1) {
+            rowNew -= 1
+            columnNew -= 1
+            diagonal.add(Square(columnNew, rowNew))
+        }
+        rowNew = row
+        columnNew = column
+        while (rowNew < 8) {
+            rowNew++
+            columnNew++
+            diagonal.add(Square(columnNew, rowNew))
+        }
+        return diagonal
+    }
+
+    fun diagonalDownToUp(): List<Square> {
+        val diagonal = mutableListOf(Square(column, row))
+        var rowNew = row
+        var columnNew = column
+        while (columnNew > 1) {
+            rowNew++
+            columnNew -= 1
+            diagonal.add(Square(columnNew, rowNew))
+        }
+        rowNew = row
+        columnNew = column
+        while (rowNew > 1) {
+            rowNew -= 1
+            columnNew++
+            diagonal.add(Square(columnNew, rowNew))
+        }
+        return diagonal
+    }
 }
 
 /**
@@ -36,8 +78,8 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = if (notation[0] !in 'a'..'h' && notation[1] !in '1'..'8')
-    throw IllegalArgumentException() else
+fun square(notation: String): Square = if (notation[0] !in 'a'..'h' || notation[1] !in '1'..'8' ||
+        notation.length < 2) throw IllegalArgumentException() else
     Square((notation[0].toInt() - 'a'.toInt() + 1), notation[1].toInt() - '1'.toInt() + 1)
 
 /**
@@ -64,6 +106,7 @@ fun square(notation: String): Square = if (notation[0] !in 'a'..'h' && notation[
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
 fun rookMoveNumber(start: Square, end: Square): Int = when {
+    ((!start.inside()) || (!end.inside())) -> throw IllegalArgumentException()
     start == end -> 0
     ((start.column == end.column && end.row != start.row)
             || (start.column != end.column && end.row == start.row)) -> 1
@@ -85,7 +128,14 @@ fun rookMoveNumber(start: Square, end: Square): Int = when {
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> {
+    if ((!start.inside()) || (!end.inside())) throw IllegalArgumentException()
+    val squareList = mutableListOf(start)
+    if (rookMoveNumber(start, end) == 2)
+        squareList.add(Square(start.column, end.row))
+    if (end != start) squareList.add(end)
+    return squareList
+}
 
 /**
  * Простая
@@ -110,7 +160,14 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int = when {
+    ((!start.inside()) || (!end.inside())) -> throw IllegalArgumentException()
+    (start.isBlack() != end.isBlack()) -> -1
+    start == end -> 0
+    (start.diagonalDownToUp().contains(end)
+            || start.diagonalUpToDown().contains(end)) -> 1
+    else -> 2
+}
 
 /**
  * Сложная
@@ -130,7 +187,9 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    TODO()
+}
 
 /**
  * Средняя
