@@ -305,7 +305,6 @@ fun minContainingCircle(vararg points: Point): Circle {
                             && containsAllDots)
                         minCircle = newCircle
                 }
-
     }
     return minCircle
 }
