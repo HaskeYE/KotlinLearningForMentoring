@@ -227,7 +227,17 @@ fun correctAngle(angle: Double): Double {
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
 fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
-    TODO()
+    if (circles.size < 2) throw IllegalArgumentException()
+    var minDist = Double.MAX_VALUE
+    var min = Pair(circles[0], circles[1])
+    if (circles.size == 2) return min
+    for (i in 0 until circles.size)
+        for (j in i + 1 until circles.size)
+            if (circles[i].distance(circles[j]) < minDist) {
+                minDist = circles[i].distance(circles[j])
+                min = Pair(circles[i], circles[j])
+            }
+    return min
 }
 
 /**

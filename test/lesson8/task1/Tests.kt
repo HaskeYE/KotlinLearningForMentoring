@@ -51,7 +51,7 @@ class Tests {
 
     private fun approxEquals(expected: Line, actual: Line, delta: Double): Boolean =
             abs(expected.angle - actual.angle) <= delta &&
-            abs(expected.b - actual.b) <= delta
+                    abs(expected.b - actual.b) <= delta
 
     private fun assertApproxEquals(expected: Line, actual: Line, delta: Double = ulp(10.0)) {
         assertTrue(approxEquals(expected, actual, delta))
@@ -175,8 +175,8 @@ class Tests {
 
 /*Данный тест при запуске выдаёт Exception, т.к. в отвтет в значении угол стоит число РI, а таковым угол быть не может
 по определению, заложенному в него в описании класса - стоит ли менять???*/
-       /* assertApproxEquals(Line(-8.057739291615289e-17, 3.141592653589793),
-                lineByPoints(Point(0.657964345085081, 0.0), Point(0.9478984310537603, -5e-324)))*/
+        /* assertApproxEquals(Line(-8.057739291615289e-17, 3.141592653589793),
+                 lineByPoints(Point(0.657964345085081, 0.0), Point(0.9478984310537603, -5e-324)))*/
         assertApproxEquals(Line(Point(1.0, 1.0), PI / 4), lineByPoints(Point(1.0, 1.0), Point(3.0, 3.0)))
     }
 
