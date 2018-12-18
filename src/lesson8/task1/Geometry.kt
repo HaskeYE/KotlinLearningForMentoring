@@ -267,5 +267,46 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    //simple conditions
+    if (points.isEmpty()) throw IllegalArgumentException("no points found")
+    if (points.size == 1) return Circle(points[0], 0.0)
+
+    //for other conditions
+    var minCircle = Circle(points[0], Double.MAX_VALUE)
+
+    //condition with two or more points
+    var maxLength = Double.MIN_VALUE
+    var dots = Pair(points[0], points[1])
+    for (i in 0 until points.size)
+        for (j in i + 1 until points.size)
+            if (points[i].distance(points[j]) > maxLength) {
+                maxLength = points[i].distance(points[j])
+                dots = Pair(points[i], points[j])
+            }
+    var contains = true
+    for (point in points)
+        if (circleByDiameter(Segment(dots.first, dots.second)).contains(point))
+            contains = false
+    if (contains)
+        minCircle = circleByDiameter(Segment(dots.first, dots.second))
+
+    //condition for three or more points
+    if (points.size > 2) {
+        for (i in 0 until points.size)
+            for (j in i + 1 until points.size)
+                for (k in j + 1 until points.size) {
+                    val newCircle =
+                            circleByThreePoints(points[i], points[j], points[k])
+                    var containsAllDots = true
+                    for (point in points)
+                        if (!newCircle.contains(point)) containsAllDots = false
+                    if (newCircle.radius < minCircle.radius
+                            && containsAllDots)
+                        minCircle = newCircle
+                }
+
+    }
+    return minCircle
+}
 
