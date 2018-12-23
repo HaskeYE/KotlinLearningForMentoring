@@ -210,15 +210,18 @@ fun bisectorByPoints(a: Point, b: Point): Line {
 }
 
 fun correctAngle(angle: Double): Double {
-    return when {
-        angle >= PI -> angle % PI
-        angle >= 0 -> angle
+    var newAngle: Double
+    when {
+        angle >= PI -> newAngle = angle % PI
+        angle >= 0 -> newAngle = angle
         else -> {
-            var a = angle
-            while (a < 0) a += PI
-            return a
+            newAngle = angle
+            while (newAngle < 0) newAngle += PI
         }
     }
+    if ((PI - newAngle) <= PI.ulp)
+        newAngle = 0.0
+    return newAngle
 }
 
 /**
