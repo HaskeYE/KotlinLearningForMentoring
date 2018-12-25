@@ -353,7 +353,7 @@ Basic, Ruby, Swift.
         assertEquals(2, printHelper(44, 22))
         assertEquals(1, printHelper(1, 1))
         assertEquals(2, printHelper(46, 22))
-        assertEquals(2, printHelper(19, 22))
+        assertEquals(3, printHelper(70, 22))
     }
 
     @Test
