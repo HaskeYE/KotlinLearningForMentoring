@@ -159,15 +159,12 @@ class Line(val b: Double, val angle: Double) {
     fun crossPoint(other: Line): Point {
         val cos1 = cos(angle)
         val cos2 = cos(other.angle)
+        val x = (cos2 * b - cos1 * other.b) / sin(other.angle - angle)
         return if ((abs(cos1) > abs(cos2)))
-            Point((cos2 * b - cos1 * other.b)
-                    / sin(other.angle - angle),
-                    ((cos2 * b - cos1 * other.b)
-                            / sin(other.angle - angle) * sin(angle) + b) / cos1)
-        else Point((cos2 * b - cos1 * other.b)
-                / sin(other.angle - angle),
-                ((cos2 * b - cos1 * other.b)
-                        / sin(other.angle - angle) * sin(other.angle) + other.b) / cos2)
+            Point(x,
+                    (x * sin(angle) + b) / cos1)
+        else Point(x,
+                (x * sin(other.angle) + other.b) / cos2)
     }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
@@ -214,7 +211,7 @@ fun correctAngle(angle: Double): Double {
     when {
         angle >= PI -> newAngle = angle % PI
         angle >= 0 -> newAngle = angle
-        else -> {
+        else -> {/*or use this: newAngle = angle % (PI) + PI*/
             newAngle = angle
             while (newAngle < 0) newAngle += PI
         }

@@ -5,7 +5,6 @@ package lesson7.task1
 import java.io.File
 import java.lang.Math.pow
 import kotlin.math.floor
-import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -670,6 +669,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         (rhv / lhv).toString().forEach { it -> if (it == '0') zeroCounter++ }
         a = lhv * pow(10.0, zeroCounter.toDouble()).toInt()*/
         outputStream.write("$lhv | $rhv\n-0   0\n--\n 1")
+        outputStream.close()
     }
     outputStream.write(" "
             + a.toString() + " " + "|" + " " + rhv.toString())
