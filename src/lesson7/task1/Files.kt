@@ -660,7 +660,7 @@ fun printHelper(a: Int, b: Int): Int = floor(a.toDouble() / b).toInt()
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val stringLength = lhv.toString().length + 1
     val outputStream = File(outputName).bufferedWriter()
-    val a = lhv
+    var a = lhv
 
 
     //first string
