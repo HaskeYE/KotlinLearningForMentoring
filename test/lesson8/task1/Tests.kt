@@ -1,8 +1,10 @@
 package lesson8.task1
 
+import lesson6.task1.plusMinus
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import java.lang.IllegalArgumentException
 import java.lang.Math.ulp
 import kotlin.math.PI
 import kotlin.math.abs
@@ -222,5 +224,18 @@ class Tests {
         for (p in listOf(p1, p2, p3, p4, p5, p6)) {
             assertTrue(result.contains(p))
         }
+    }
+
+
+    @Test
+    @Tag("Exam")
+    fun foo() {
+        assertThrows(IllegalArgumentException::class.java)
+        { foo("input/fooex1.txt", "A & B & !C") }
+        assertThrows(IllegalArgumentException::class.java)
+        { foo("input/foo1.txt", "A & G") }
+        assertEquals(setOf(12, -407), foo("input/foo1.txt", "A & B & !C"))
+        assertEquals(emptySet<Int>(), foo("input/fooempty1.txt", "A & B & !C"))
+
     }
 }

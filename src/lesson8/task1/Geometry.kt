@@ -3,6 +3,8 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import java.io.File
+import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.lang.Math.ulp
 import kotlin.math.*
@@ -307,6 +309,72 @@ fun minContainingCircle(vararg points: Point): Circle {
                         minCircle = newCircle
                 }
     }
+    println("-123".toInt())
     return minCircle
+}
+
+class Plurality(val letter: Char, val elements: Set<Int>)
+
+//Working exam task
+fun foo(inputName: String, expr: String): Set<Int> {
+    try {
+        File(inputName).readText()
+    } catch (e: IOException) {
+        throw e
+    }
+    if (expr.contains(Regex("""[^A-Z &!]""")) || expr.isEmpty()
+            || File(inputName).readLines().isEmpty())
+        throw IllegalArgumentException()
+
+
+    val plurSet = hashMapOf<Char, Set<Int>>()
+    for (line in File(inputName).readLines()) {
+        println(line)
+        if ((line[0] !in 'A'..'Z') || line.contains(Regex("""[^A-Z0-9 =,\-]"""))
+                || line[2] != '=' || line[1] != ' ' && line[3] != ' ')
+            throw IllegalArgumentException()
+        val s = mutableSetOf<Int>()
+        if (line.length < 4)
+            plurSet[line[0]] = emptySet() else {
+            val newLine = if (line.length > 3) line.removeRange(0, 4) else
+                line.removeRange(0, 3)
+            for (number in newLine.split(", ")) {
+                s.add(number.toInt())
+            }
+            plurSet[line[0]] = s
+        }
+    }
+
+
+    val symbols = expr.split(" & ")
+    for (symbol in symbols)
+        if (((symbol.length > 2) || symbol.isEmpty()) ||
+                (symbol.equals(Regex("""![A-Z]""")) &&
+                        symbol.equals(("""[A-Z]"""))) ||
+                !plurSet.containsKey(if (symbol[0] == '!') symbol[1] else symbol[0])
+        )
+            throw IllegalArgumentException()
+
+    if (plurSet[expr[0]] == emptySet<Int>()) return emptySet()
+    var varPlur = plurSet[expr[0]]
+    for (i in 1 until symbols.size) {
+        var newPlur = varPlur
+        when {
+            (symbols[i][0] == '!') ->
+                if (plurSet[symbols[i][1]] == emptySet<Int>()) {
+                } else {
+                    for (numeric in plurSet[symbols[i][1]]!!)
+                        if (varPlur!!.contains(numeric))
+                            newPlur = newPlur!! - numeric
+                }
+            else -> if (plurSet[symbols[i][0]] == emptySet<Int>())
+                return emptySet() else
+                for (numeric in varPlur!!)
+                    if (!plurSet[symbols[i][0]]!!.contains(numeric))
+                        newPlur = newPlur!! - numeric
+        }
+        varPlur = newPlur
+    }
+    return varPlur!!
 }
 
