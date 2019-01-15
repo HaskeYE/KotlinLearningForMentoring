@@ -313,7 +313,6 @@ fun minContainingCircle(vararg points: Point): Circle {
     return minCircle
 }
 
-class Plurality(val letter: Char, val elements: Set<Int>)
 
 //Working exam task
 fun foo(inputName: String, expr: String): Set<Int> {
