@@ -236,6 +236,6 @@ class Tests {
         { foo("input/foo1.txt", "A & G") }
         assertEquals(setOf(12, -407), foo("input/foo1.txt", "A & B & !C"))
         assertEquals(emptySet<Int>(), foo("input/fooempty1.txt", "A & B & !C"))
-
+        assertEquals(emptySet<Int>(), foo("input/fooempty2.txt", "A & B & !C"))
     }
 }

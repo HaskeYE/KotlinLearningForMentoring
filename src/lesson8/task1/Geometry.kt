@@ -362,15 +362,14 @@ fun foo(inputName: String, expr: String): Set<Int> {
             (symbols[i][0] == '!') ->
                 if (plurSet[symbols[i][1]] == emptySet<Int>()) {
                 } else {
+
                     for (numeric in plurSet[symbols[i][1]]!!)
                         if (varPlur!!.contains(numeric))
                             newPlur = newPlur!! - numeric
                 }
             else -> if (plurSet[symbols[i][0]] == emptySet<Int>())
                 return emptySet() else
-                for (numeric in varPlur!!)
-                    if (!plurSet[symbols[i][0]]!!.contains(numeric))
-                        newPlur = newPlur!! - numeric
+                newPlur = newPlur!!.intersect(plurSet[symbols[i][0]]!!)
         }
         varPlur = newPlur
     }
