@@ -348,8 +348,8 @@ fun foo(inputName: String, expr: String): Set<Int> {
     val symbols = expr.split(" & ")
     for (symbol in symbols)
         if (((symbol.length > 2) || symbol.isEmpty()) ||
-                (symbol.equals(Regex("""![A-Z]""")) &&
-                        symbol.equals(("""[A-Z]"""))) ||
+                (symbol.matches(Regex("""![A-Z]""")) &&
+                        symbol.matches(Regex("""[A-Z]"""))) ||
                 !plurSet.containsKey(if (symbol[0] == '!') symbol[1] else symbol[0])
         )
             throw IllegalArgumentException()
