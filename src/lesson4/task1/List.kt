@@ -2,7 +2,6 @@
 
 package lesson4.task1
 
-import com.sun.org.apache.xalan.internal.lib.ExsltMath.power
 import lesson1.task1.discriminant
 import lesson3.task1.minDivisor
 import java.lang.Math.pow
@@ -168,11 +167,7 @@ fun times(a: List<Double>, b: List<Double>): Double {
  * Значение пустого многочлена равно 0.0 при любом x.
  */
 fun polynom(p: List<Double>, x: Double): Double {
-    var px = 0.0
-    for (i in 0 until p.size) {
-        px += p[i] * power(x, i.toDouble())
-    }
-    return px
+    TODO()
 }
 
 /**
